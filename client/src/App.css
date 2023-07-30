@@ -1,0 +1,211 @@
+html,
+body {
+  --color1: rgb(0, 0, 25);
+  --color2: #00ceb8;
+  --color3: midnightblue;
+  --color4: #1a1c20;
+  --sticky1: 0rem;
+  --sticky2: 7rem;
+  --sticky3: 14rem;
+  --qb: #ff2a6d;
+  --rb: #00ceb8;
+  --wr: #58a7ff;
+  --te: #ffae58;
+  font-size: 1vmin;
+  background-color: var(--color1);
+
+  text-align: center;
+  color: white;
+
+  overflow-x: hidden;
+  width: 100vw;
+  height: 100vh;
+  font-family: 'Ubuntu Mono', sans-serif;
+
+  margin: auto;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 25%;
+  position: relative;
+}
+
+.App {
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.click:hover {
+  cursor: pointer;
+}
+
+a.home {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 3rem;
+  display: block;
+  width: fit-content;
+  padding: 2rem 0 0 2rem;
+}
+
+img.thumbnail {
+  height: 7rem;
+  width: 7rem;
+  margin: 0;
+  margin-right: 1rem;
+  vertical-align: middle;
+  border-radius: 50%;
+}
+
+h1,
+h2 {
+  font-size: 3rem;
+  margin: 2rem auto;
+}
+
+option {
+  background-color: #9ca7b4;
+  color: black;
+  font-weight: inherit;
+  font-family: inherit;
+}
+
+.green {
+  color: greenyellow;
+  text-shadow: 0 0 1.5rem black;
+  font-weight: 900;
+}
+
+.red,
+.fa-solid.fa-circle-exclamation {
+  color: red;
+  text-shadow: 0 0 1.5rem black;
+  font-weight: 900;
+}
+
+.redb {
+  background-color: red;
+  background-image: none !important;
+  font-weight: 900;
+  font-size: 4rem;
+  text-shadow: 0 0 1.5rem black;
+  position: relative;
+}
+
+.greenb {
+  background-color: green;
+  background-image: none !important;
+  font-weight: 900;
+  font-size: 4rem;
+  text-shadow: 0 0 1.5rem black;
+  position: relative;
+}
+
+.yellow {
+  color: gold;
+}
+
+.left {
+  text-align: left;
+  white-space: nowrap;
+  padding-left: 1rem;
+}
+
+.left>p,
+.left div p.left,
+.left li {
+  margin: 0;
+  margin-right: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: fit-content;
+}
+
+.left li {
+  height: 3rem;
+}
+
+.left:hover>p:only-of-type,
+.left:hover div p:only-of-type,
+.left li:hover,
+.left li.end:hover {
+  overflow: visible;
+  width: fit-content;
+  min-width: 90%;
+  background-color: black;
+  position: relative;
+  z-index: 2;
+}
+
+.left:hover>p:only-of-type,
+.left:hover div p:only-of-type {
+  outline: 1rem solid black;
+  filter: drop-shadow(0 0 1rem white);
+}
+
+.left li:hover>span.end {
+  position: absolute;
+  min-width: fit-content;
+  height: 3rem;
+  background-color: inherit;
+  outline: 0.5rem solid black;
+  direction: ltr;
+}
+
+.end:hover {
+  direction: rtl;
+}
+
+span.end {
+  direction: ltr;
+  right: 0;
+  width: 100%;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+ol li {
+  list-style: none;
+}
+
+i {
+  color: var(--color2);
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  appearance: none;
+}
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 1rem;
+  height: 1rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color2);
+}
+
+.rotate {
+  animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+    /* Start with no rotation (0 degrees) */
+  }
+
+  100% {
+    transform: rotate(360deg);
+    /* Rotate the element 360 degrees for a full rotation */
+  }
+}

@@ -1,0 +1,645 @@
+.click:hover {
+  cursor: pointer;
+}
+
+div.trend-range {
+  position: relative;
+  margin: auto;
+  margin-bottom: 2rem;
+  font-size: 3.5rem;
+  font-family: "Monomaniac One", sans-serif;
+  height: 7rem;
+  width: fit-content;
+  background-color: var(--color3);
+  filter: contrast(2);
+  box-shadow: 0 0 1rem white, inset 0 0 2rem var(--color4);
+  display: flex;
+  align-items: center;
+}
+div.trend-range label.sort {
+  display: inline-flex;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+div.trend-range label.sort i {
+  color: var(--color2);
+  font-size: 5rem;
+  margin: auto;
+  width: 10rem;
+}
+div.trend-range label.sort select.hidden_behind {
+  border: none;
+  height: 100%;
+  color: transparent;
+  background-color: initial;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  font-size: 2.5rem;
+}
+div.trend-range label.sort select.hidden_behind option {
+  color: black;
+  font-family: "Pulang", sans-serif;
+  font-weight: 900;
+  text-align: center;
+}
+
+div.trade_search_wrapper {
+  flex-direction: column;
+}
+
+div.search_filter_wrapper,
+div.trade_search_wrapper {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  width: 50%;
+  margin: auto;
+}
+div.search_filter_wrapper > div:first-child,
+div.trade_search_wrapper > div:first-child {
+  display: flex;
+  justify-content: right;
+  width: 25%;
+}
+div.search_filter_wrapper > div:last-child,
+div.trade_search_wrapper > div:last-child {
+  display: flex;
+  justify-content: left;
+  width: 25%;
+}
+div.search_filter_wrapper div.search_wrapper,
+div.trade_search_wrapper div.search_wrapper {
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+div.search_filter_wrapper div.search_wrapper img.thumbnail,
+div.trade_search_wrapper div.search_wrapper img.thumbnail {
+  position: absolute;
+  height: 5rem;
+  width: 5rem;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  margin-left: 1rem;
+  box-shadow: 0 0 2rem var(--color2);
+  opacity: 0.85;
+}
+div.search_filter_wrapper div.search_wrapper input.search,
+div.trade_search_wrapper div.search_wrapper input.search {
+  font-size: 2.5rem;
+  padding: 1rem;
+  padding-left: 6rem;
+  margin: auto;
+  text-align: left;
+  background-color: var(--color2);
+  border-radius: 1rem;
+  border: 1rem ridge var(--color3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: inset 0 0 1rem black;
+  font-family: "Ubuntu Mono", sans-serif;
+  font-weight: 900;
+  padding-right: 3rem;
+  box-shadow: 0 0 1rem var(--color2);
+}
+div.search_filter_wrapper div.search_wrapper button.input,
+div.trade_search_wrapper div.search_wrapper button.input {
+  position: absolute;
+  right: 1rem;
+  top: 0;
+  bottom: 0;
+  background-color: transparent;
+  border: 1rem solid transparent;
+  margin: auto;
+}
+div.search_filter_wrapper div.search_wrapper ol.dropdown,
+div.trade_search_wrapper div.search_wrapper ol.dropdown {
+  position: absolute;
+  height: fit-content;
+  max-height: 65rem;
+  overflow: auto;
+  width: 100%;
+  padding: 0;
+  margin-top: 6.5rem;
+  border: 1rem ridge var(--color2);
+  box-sizing: border-box;
+  z-index: 11;
+  background-color: var(--color3);
+}
+div.search_filter_wrapper div.search_wrapper ol.dropdown li button,
+div.trade_search_wrapper div.search_wrapper ol.dropdown li button {
+  display: flex;
+  width: 100%;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 2.5rem;
+  font-weight: 900;
+  filter: contrast(2);
+  background-color: #9ca7b4;
+  color: black;
+  box-shadow: inset 0 0 2rem black;
+  font-family: "Ubuntu Mono", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+div.search_filter_wrapper div.search_wrapper ol.dropdown li button p,
+div.trade_search_wrapper div.search_wrapper ol.dropdown li button p {
+  width: 100%;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 2.5rem;
+  font-weight: 900;
+  filter: contrast(2);
+  background-color: #9ca7b4;
+  color: black;
+  box-shadow: inset 0 0 2rem black;
+  font-family: "Ubuntu Mono", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+div.search_filter_wrapper div.search_wrapper ol.dropdown li button p img,
+div.trade_search_wrapper div.search_wrapper ol.dropdown li button p img {
+  box-shadow: 0 0 1rem black;
+  margin-right: 1rem;
+  height: 7rem;
+  width: 7rem;
+  border-radius: 50%;
+  vertical-align: middle;
+  position: static;
+}
+
+ol.page_numbers {
+  display: flex;
+  font-size: 3rem;
+  width: fit-content;
+  max-width: 80%;
+  margin: auto;
+  padding: 1rem 0;
+  background-color: var(--color1);
+  overflow: auto;
+  filter: drop-shadow(0 0 0.25rem silver);
+}
+ol.page_numbers li {
+  margin: 0 1rem;
+  border: ridge 0.1rem var(--color4);
+  padding: 2rem;
+  opacity: 0.25;
+}
+ol.page_numbers li.active {
+  filter: brightness(2);
+  color: var(--color2);
+  border: ridge 0.1rem var(--color2);
+  opacity: 1;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
+  max-width: 1500px;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: auto;
+}
+
+table.modal {
+  filter: contrast(2);
+}
+table.modal caption > strong {
+  box-shadow: 0 0 2rem var(--wr);
+  height: 7rem;
+  display: block;
+  width: 90%;
+  margin: 2rem auto;
+}
+table.modal th,
+table.modal td {
+  text-shadow: unset;
+  font-size: 3rem;
+  background-color: midnightblue;
+  opacity: 0.75;
+  padding: 1rem;
+  box-shadow: inset 0 0 1.5rem white;
+}
+table.modal th:only-of-type,
+table.modal td {
+  text-align-last: center;
+}
+
+table.primary {
+  font-size: 3rem;
+}
+table.primary thead {
+  filter: drop-shadow(0 0 1rem silver);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+table.primary thead tr th {
+  background-image: radial-gradient(black 0%, white 500%);
+  position: relative;
+  height: 7rem;
+  font-size: 3rem;
+  white-space: nowrap;
+}
+table.primary thead tr th > p {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+table.primary thead tr th > p:hover {
+  overflow: visible;
+  width: fit-content;
+  position: relative;
+  z-index: 2;
+  background-color: black;
+  box-shadow: 0 0 1rem white;
+  padding-right: 2rem;
+}
+table.primary thead tr th > p.end:hover {
+  position: absolute;
+  width: fit-content;
+  direction: rtl;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 2rem;
+}
+table.primary thead tr th.half {
+  height: 3.5rem;
+  font-size: 2.5rem;
+}
+table.primary thead tr th.half.small {
+  font-size: 2.25rem;
+}
+table.primary thead tr th label {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  font-family: "Pulang", sans-serif;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+  color: var(--color2);
+  z-index: 1;
+}
+table.primary thead tr th label p {
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+table.primary thead tr th label select.hidden_behind {
+  color: transparent;
+  background-color: initial;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  font-size: 2.5rem;
+  width: 100%;
+  border: none;
+}
+table.primary thead tr th label select.hidden_behind option {
+  color: black;
+  font-family: "Pulang", sans-serif;
+  font-weight: 900;
+  text-align: center;
+}
+table.primary thead tr th select {
+  color: var(--color2);
+  background-color: inherit;
+  text-align: center;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  border: none;
+}
+table.primary thead tr label:hover {
+  overflow: visible;
+  background-color: black;
+  min-width: fit-content;
+  box-shadow: 0 0 2rem var(--wr);
+  z-index: 2;
+}
+table.primary thead tr th.small {
+  font-size: 2.5rem;
+}
+table.primary tbody tr span.player_score:hover {
+  outline: 0.5rem solid yellow;
+}
+table.primary tbody tr p.stat,
+table.primary tbody tr span.player_score {
+  font-family: "Monomaniac One", sans-serif;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+table.primary tbody tr p.stat > p,
+table.primary tbody tr span.player_score > p {
+  position: absolute;
+  display: flex;
+  top: 100%;
+  align-items: center;
+  height: 100%;
+  bottom: 0;
+  background-color: var(--color4);
+  color: var(--color2);
+  filter: brightness(2), contrast(2);
+  box-shadow: 0 0 3rem var(--te);
+  border: 1rem ridge var(--wr);
+  border-radius: 3rem;
+  padding: 0 1rem;
+  z-index: 101;
+}
+table.primary tbody tr td {
+  background-image: radial-gradient(black -100%, var(--wr) 500%);
+  height: 7rem;
+  box-shadow: inset 0 0 1rem var(--color4);
+  text-align: center;
+  text-shadow: 0 0 2.5rem black;
+}
+table.primary tbody tr td.stat {
+  box-shadow: inset 0 0 1rem var(--color4);
+}
+table.primary tbody tr td.stat .red,
+table.primary tbody tr td.stat .green {
+  font-weight: inherit;
+}
+table.primary tbody tr td.left {
+  text-align: left;
+  white-space: nowrap;
+  padding: 0 0.5rem;
+}
+table.primary tbody tr td.left > p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+table.primary tbody tr.active {
+  position: sticky;
+  top: 7rem;
+  z-index: 9;
+  filter: drop-shadow(0 0 1rem silver);
+}
+table.primary tbody tr.active td {
+  background-image: radial-gradient(var(--color4) -100%, var(--color2) 250%);
+}
+table.primary tbody tr.active2 td table.secondary {
+  box-shadow: 0 0 1rem white;
+}
+table.primary tbody tr.active2 td table.secondary.lineup_body,
+table.primary tbody tr.active2 td table.secondary.subs_body {
+  box-shadow: initial;
+}
+table.primary tbody tr.active2 td div.secondary.nav {
+  width: 100%;
+  height: 7rem;
+  display: flex;
+  justify-content: space-evenly;
+  margin: auto;
+  overflow: hidden;
+  background-color: black;
+  z-index: 8;
+}
+table.primary tbody tr.active2 td div.secondary.nav div {
+  width: 100%;
+  height: 7rem;
+  display: flex;
+  justify-content: space-evenly;
+  margin: auto;
+  overflow: hidden;
+  background-color: black;
+}
+table.primary tbody tr.active2 td div.secondary.nav button {
+  background-color: transparent;
+  font-family: "Ubuntu Mono", sans-serif;
+  font-size: 3rem;
+  padding: 0.25rem;
+  border: 0.25rem solid transparent;
+  color: white;
+  opacity: 0.75;
+}
+table.primary tbody tr.active2 td div.secondary.nav button.active {
+  color: var(--color2);
+  opacity: 1;
+  border: 0.25rem solid var(--color2);
+}
+table.primary tbody tr.active2 td div.secondary.nav select.hidden_behind {
+  background-color: black;
+}
+table.primary tbody tr.active2 td table.secondary.lineup td,
+table.primary tbody tr.active2 td table.secondary.subs td {
+  font-size: 2.25rem;
+}
+table.primary table.secondary thead {
+  filter: drop-shadow(0 0 1rem silver);
+  position: sticky;
+  top: 14rem;
+  z-index: 7;
+}
+table.primary table.secondary thead tr th {
+  background-image: radial-gradient(black 0%, royalblue 500%);
+}
+table.primary table.secondary tbody tr td {
+  background-image: radial-gradient(black -50%, darkgray 500%);
+}
+table.primary table.secondary tbody tr.active {
+  position: sticky;
+  top: 21rem;
+  z-index: 6;
+  filter: drop-shadow(0 0 1rem silver);
+}
+table.primary table.secondary tbody tr.active td {
+  background-image: radial-gradient(var(--color4) -100%, var(--color2) 250%);
+}
+table.primary table.secondary tbody tr.active2 td div.tertiary.nav {
+  display: flex;
+}
+table.primary table.secondary tbody tr.active2 td div.tertiary.nav div {
+  width: 100%;
+  height: 7rem;
+  display: flex;
+  justify-content: space-evenly;
+  margin: auto;
+  overflow: hidden;
+  background-color: black;
+}
+table.primary table.secondary tbody tr.active2 td div.tertiary.nav div button {
+  background-color: transparent;
+  font-family: "Ubuntu Mono", sans-serif;
+  font-size: 3rem;
+  padding: 0.25rem;
+  border: 0.25rem solid transparent;
+  color: white;
+  opacity: 0.75;
+  height: 100%;
+}
+table.primary table.secondary tbody tr.active2 td div.tertiary.nav div button.active {
+  color: var(--color2);
+  opacity: 1;
+  border: 0.25rem solid var(--color2);
+}
+table.primary table.secondary tbody tr.active2 td table.lineup,
+table.primary table.secondary tbody tr.active2 td table.subs {
+  position: sticky;
+  top: 28rem;
+  z-index: 0;
+}
+table.primary table.secondary tbody tr.active2 td table.lineup tr.active_wrapper,
+table.primary table.secondary tbody tr.active2 td table.subs tr.active_wrapper {
+  position: sticky;
+  top: 35rem;
+  z-index: 5;
+}
+table.primary table.secondary tbody tr.active2 td table.tertiary {
+  font-size: 2.5rem;
+}
+table.primary table.secondary tbody tr.active2 td table.tertiary thead {
+  position: sticky;
+  top: 28rem;
+  z-index: 6;
+}
+table.primary table.secondary tbody tr.active2 td table.tertiary tbody tr.active {
+  position: sticky;
+  top: 35rem;
+  z-index: 5;
+}
+table.primary table.secondary tbody tr.active2 td table.tertiary tbody tr.active td {
+  background-image: radial-gradient(var(--color4) -100%, var(--color2) 250%);
+}
+table.primary table.subs,
+table.primary table.lineup {
+  display: inline-table;
+  width: 50%;
+  vertical-align: top;
+  position: sticky;
+  top: 14rem;
+  box-shadow: 0 0 1rem white;
+}
+table.primary table.subs tr.active_wrapper,
+table.primary table.lineup tr.active_wrapper {
+  position: sticky;
+  top: 21rem;
+  z-index: 5;
+}
+table.primary table.subs tbody tr td {
+  background-image: radial-gradient(black -100%, royalblue 500%);
+}
+table.primary table.lineup tbody tr td,
+table.primary table.tertiary tbody tr td {
+  background-image: radial-gradient(black -100%, blueviolet 500%);
+  box-shadow: inset 0 0 1rem rgb(48, 25, 52);
+}
+
+table#trades table.primary_body {
+  position: sticky;
+  top: 7rem;
+}
+table#trades tr.primary table.trade_summary {
+  outline: 0.25rem ridge var(--wr);
+}
+table#trades tr.primary table.trade_summary td {
+  background-image: radial-gradient(var(--wr) -150%, var(--color4) 100%);
+}
+table#trades tr.primary table.trade_summary td div.trade_manager {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-bottom: 2rem;
+}
+table#trades tr.primary table.trade_summary td div.trade_manager div {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+table#trades tr.primary table.trade_summary td div.trade_manager div:first-of-type {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: fit-content;
+}
+table#trades tr.primary table.trade_summary td div.trade_manager div:first-of-type p.value,
+table#trades tr.primary table.trade_summary td div.trade_manager div:first-of-type p.trend {
+  width: fit-content;
+  font-family: "Monomaniac One", sans-serif;
+  filter: contrast(1.25);
+  background-image: radial-gradient(var(--wr) -250%, var(--color4) 100%);
+  padding: 1rem;
+  font-size: 2.5rem;
+}
+table#trades tr.primary table.trade_summary table.trade_info td {
+  font-size: 2.5rem;
+}
+table#trades tr.primary table.trade_summary table.trade_info td.value {
+  font-family: "Monomaniac One", sans-serif;
+  font-size: 2.5rem;
+  filter: contrast(1.5);
+}
+table#trades tr.primary.active {
+  position: unset;
+}
+table#trades tr.primary.active table.trade_summary td {
+  background-image: radial-gradient(var(--color4) -100%, var(--color2) 250%);
+}
+table#trades tr.primary.active table.trade_summary td table div.trade_manager div p.value,
+table#trades tr.primary.active table.trade_summary td table div.trade_manager div p.trend {
+  background-image: radial-gradient(var(--color4) -100%, var(--color2) 250%);
+  box-shadow: inset 0 0 1rem var(--color2);
+}
+table#trades tr.primary.active table.trade_summary tr.trade_summary {
+  position: sticky;
+  top: 7rem;
+  z-index: 8;
+}
+table#trades tr.primary.active table.trade_info td {
+  background-image: radial-gradient(var(--color4) -100%, var(--color2) 250%);
+  box-shadow: inset 0 0 1rem var(--color2);
+}
+table#trades tr.primary.active2 {
+  position: sticky;
+  top: 7rem;
+  z-index: 6;
+}
+table#trades tr.primary.active2 div {
+  position: sticky;
+  top: 7rem;
+}
+table#trades tr.primary.active2 thead tr {
+  position: unset;
+}
+
+table#managers {
+  font-size: 2.5rem;
+}
+
+/*# sourceMappingURL=tableMain.css.map */

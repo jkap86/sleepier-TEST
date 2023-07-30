@@ -1,0 +1,279 @@
+div#homepage {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+div#homepage input::placeholder {
+  color: black;
+  opacity: 0.5;
+  font-family: "Ubuntu Mono", sans-serif;
+}
+div#homepage input {
+  background-color: var(--color2);
+  border-radius: 5rem;
+  box-shadow: inset 0 0 2.5rem black, 0 0 2rem white;
+  font-weight: 900;
+  font-family: "Ubuntu Mono", sans-serif;
+  text-align: center;
+  border: ridge var(--color3);
+}
+div#homepage button {
+  background-color: var(--color3);
+  color: white;
+  font-family: "Ubuntu Mono", sans-serif;
+  margin: auto;
+  margin-top: 3rem;
+}
+div#homepage div.picktracker {
+  width: fit-content;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 3rem;
+  flex-direction: column;
+  margin: 2rem;
+  position: absolute;
+  z-index: 2;
+  filter: contrast(2);
+}
+div#homepage div.picktracker p.home {
+  color: var(--color2);
+  filter: brightness(2);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+div#homepage div.picktracker input.picktracker {
+  padding: 1rem 0;
+  float: left;
+  border-width: 1rem;
+  font-size: 3rem;
+}
+div#homepage div.picktracker button {
+  border: 0.5rem ridge white;
+  border-radius: 2rem;
+  margin: auto;
+}
+div#homepage div.home_wrapper {
+  margin: auto;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  width: 100rem;
+  height: 100rem;
+}
+div#homepage div.home_wrapper img.home {
+  width: 100%;
+  border-radius: 50%;
+  filter: brightness(0.25) drop-shadow(0 0 3rem white);
+  height: 90rem;
+  width: 90rem;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 0;
+}
+div#homepage div.home_wrapper div.home_title {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 75rem;
+  margin: auto;
+  filter: contrast(2);
+}
+div#homepage div.home_wrapper strong.home {
+  font-family: "Pulang", sans-serif;
+  width: fit-content;
+  height: fit-content;
+  font-size: 25rem;
+  color: var(--color2);
+  text-shadow: 0 0 5rem black;
+  align-content: flex-start;
+}
+div#homepage div.home_wrapper div.user_input {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+div#homepage div.home_wrapper div.user_input input.home {
+  padding: 2rem 0;
+  border-width: 2rem;
+  font-size: 5rem;
+  text-align: center;
+  margin: 1rem;
+}
+div#homepage div.home_wrapper div.user_input i {
+  width: 0;
+  float: right;
+  font-size: 5rem;
+  color: var(--te);
+}
+div#homepage div.home_wrapper button.home {
+  border: 0.5rem ridge white;
+  border-radius: 2rem;
+  padding: 1.5rem;
+  font-size: 4rem;
+}
+div#homepage div.home_wrapper div.dropdown_wrapper {
+  position: absolute;
+  width: 50rem;
+  height: 75rem;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 11;
+}
+div#homepage div.home_wrapper div.dropdown_wrapper p.dropdown_header {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  font-size: 4rem;
+  left: 0;
+  right: 0;
+  background-color: midnightblue;
+  z-index: 5;
+  line-height: 7rem;
+  border: 1rem ridge var(--color2);
+  box-shadow: inset 0 0 1rem black, 0 0 5rem black;
+  color: var(--color2);
+  font-weight: 900;
+  filter: contrast(2);
+  z-index: 3;
+}
+div#homepage div.home_wrapper div.dropdown_wrapper ol.dropdown {
+  position: absolute;
+  white-space: nowrap;
+  height: fit-content;
+  width: 100%;
+  margin-top: 7rem;
+  padding: 0;
+  border: 1rem ridge var(--color2);
+  box-shadow: 0 0 5rem black;
+  box-sizing: border-box;
+  z-index: 11;
+  background-color: var(--color3);
+  filter: contrast(2);
+  overflow: auto;
+  max-height: 65rem;
+  z-index: 2;
+}
+div#homepage div.home_wrapper div.dropdown_wrapper ol.dropdown li {
+  list-style: none;
+}
+div#homepage div.home_wrapper div.dropdown_wrapper ol.dropdown li button {
+  font-size: 2.5rem;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: #9ca7b4;
+  color: black;
+  filter: contrast(2);
+  box-shadow: inset 0 0 2rem black;
+}
+div#homepage div.home_wrapper div.dropdown_wrapper ol.dropdown li button p {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  position: relative;
+  justify-content: space-between;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-weight: 900;
+}
+div#homepage div.home_wrapper div.dropdown_wrapper ol.dropdown li button p span.leagues_count {
+  font-size: 4rem;
+  line-height: 7rem;
+  width: fit-content;
+  padding: 0 2rem;
+}
+div#homepage div.home_wrapper div.dropdown_wrapper ol.dropdown li button p span.leagues_count:last-of-type {
+  text-align: left;
+  padding-right: 1rem;
+}
+div#homepage div.home_wrapper div.dropdown_wrapper ol.dropdown li button p span.username {
+  width: 35rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  padding: 0;
+  font-size: 2.5rem;
+  text-align: left;
+}
+div#homepage div.home_wrapper div.dropdown_wrapper ol.dropdown li button p span.username img.thumbnail {
+  border-radius: 50%;
+  height: 7rem;
+  width: 7rem;
+  vertical-align: middle;
+  padding-right: 1rem;
+}
+
+div.loading {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  width: 90%;
+  height: 100%;
+  margin: auto;
+}
+div.loading img.loading {
+  width: 75rem;
+  height: auto;
+  margin: auto;
+  vertical-align: middle;
+  padding: 12.5rem;
+  border-radius: 50%;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 3rem var(--color2));
+}
+div.loading .z_one,
+div.loading .z_two,
+div.loading .z_three {
+  position: absolute;
+  font-size: 10rem;
+  color: rgb(0, 195, 255);
+  opacity: 0;
+  filter: brightness(2);
+  animation-name: snooze;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
+}
+div.loading .z_two {
+  animation-delay: 0.5s;
+}
+div.loading .z_three {
+  animation-delay: 1.5s;
+}
+
+@keyframes snooze {
+  0% {
+    transform: translateY(0rem) translateX(0rem);
+    font-size: 10rem;
+    opacity: 0;
+  }
+  10% {
+    transform: translateY(-10rem) translateX(5rem);
+    font-size: 11rem;
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100rem) translateX(50rem);
+    font-size: 20rem;
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=homepage.css.map */
