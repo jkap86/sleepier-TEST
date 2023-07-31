@@ -23,7 +23,7 @@ const LoadData = ({ tab, player_ids }) => {
 
     useEffect(() => {
         try {
-            if (params.username !== user.username) {
+            if (params.username.toLowerCase() !== user.username?.toLowerCase()) {
                 console.log(params.username)
                 dispatch(resetState());
                 dispatch(fetchUser(params.username));
