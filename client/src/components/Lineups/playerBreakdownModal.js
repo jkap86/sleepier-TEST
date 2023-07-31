@@ -9,7 +9,7 @@ const PlayerBreakdownModal = forwardRef(({
 }, playerBreakdownRef) => {
     const dispatch = useDispatch();
     const { leagues } = useSelector(state => state.user);
-    const { allPlayers, projections, projectionDict } = useSelector(state => state.main);
+    const { allplayers, projections, projectionDict } = useSelector(state => state.main);
     const { playerBreakdownModal, week } = useSelector(state => state.lineups);
     const [projectionEdits, setProjectionEdits] = useState({});
     const [tab, setTab] = useState('Categories');
@@ -46,7 +46,7 @@ const PlayerBreakdownModal = forwardRef(({
                         stats: {
                             ...projections[week][player_id].stats,
                             ...projectionEdits,
-                            pts_ppr_update: updatePPRScore
+                            pts_ppr_update: updatePPRScore + 0.00000001
                         }
                     },
                     edited: true
@@ -144,7 +144,7 @@ const PlayerBreakdownModal = forwardRef(({
                 <caption>
                     <strong>
                         {avatar(player_id, 'player', 'player')}
-                        {allPlayers[player_id]?.full_name}
+                        {allplayers[player_id]?.full_name}
                         &nbsp;
                         <em className="updated_ppr_score">{updatePPRScore?.toFixed(1)} pts</em>
                     </strong>
