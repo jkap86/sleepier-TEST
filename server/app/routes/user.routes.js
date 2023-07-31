@@ -13,7 +13,10 @@ module.exports = (app, user_cache) => {
         users.create(req, res, app, user_cache)
     })
 
-
+    router.get("/findmostleagues", (req, res) => {
+        const users = app.get('top_users')
+        res.send(users || [])
+    })
 
     app.use('/user', router);
 }

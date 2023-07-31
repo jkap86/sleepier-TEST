@@ -54,6 +54,7 @@ function start() {
         console.log(`Server is running on port ${PORT}.`);
 
         require('./app/backgroundTasks/dailyUpdate')(app);
+        require('./app/backgroundTasks/findMostLeagus')(app)
         require('./app/backgroundTasks/getProjections')(app)
     });
 

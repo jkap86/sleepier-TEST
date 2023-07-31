@@ -23,12 +23,12 @@ const Homepage = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const users = await axios.post('user/findmostleagues')
+            const users = await axios.get('user/findmostleagues')
 
             setDropdownOptions(users.data)
         }
 
-        //fetchUsers()
+        fetchUsers()
     }, [])
 
     useEffect(() => {
