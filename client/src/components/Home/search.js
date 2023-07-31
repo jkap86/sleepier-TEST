@@ -15,6 +15,18 @@ const Search = ({ id, placeholder, list, isLoading, searched, setSearched }) => 
             x.text?.trim().toLowerCase()
                 .replace(/[^a-z0-9]/g, "")
                 .includes(s.replace(/[^a-z0-9]/g, "").trim().toLowerCase()))
+            .sort(
+                (a, b) => b.text
+                    ?.trim()
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/g, "")
+                    .startsWith(
+                        s
+                            .replace(/[^a-z0-9]/g, "")
+                            .trim()
+                            .toLowerCase()
+                    ) ? 1 : -1
+            )
 
 
         return options;
@@ -93,7 +105,6 @@ const Search = ({ id, placeholder, list, isLoading, searched, setSearched }) => 
                         className="dropdown"
                     >
                         {dropdownOptions
-                            .sort((a, b) => a.text > b.text ? 1 : -1)
                             .map((option, index) =>
                                 <li key={`${option.text}_${index}`}>
                                     <button
