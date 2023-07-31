@@ -36,7 +36,7 @@ const Standings = ({
         ]]
 
     const body = Object.keys(projectionDict[hash]?.['1']?.[league_id] || {})
-        .sort((a, b) => getAttribute('wins', b) - getAttribute('wins', a) || getAttribute('fpts', b) - getAttribute('fpts', a))
+        .sort((a, b) => (getAttribute('wins', b) + getAttribute('median_wins', b)) - (getAttribute('wins', a) + + getAttribute('median_wins', a)) || getAttribute('fpts', b) - getAttribute('fpts', a))
         .map(roster_id => {
             const wins = getAttribute('wins', roster_id) + getAttribute('median_wins', roster_id)
             const losses = getAttribute('losses', roster_id) + getAttribute('median_losses', roster_id)
