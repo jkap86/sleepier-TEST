@@ -22,29 +22,37 @@ const TableMain = ({
     loadMore
 }) => {
     const pageRef = useRef(null)
-    const searchRef = useRef(null)
+    const itemActiveRef = useRef(null)
 
     useEffect(() => {
         if (pageRef.current !== null) {
             pageRef.current.focus()
             pageRef.current.scrollIntoView({
                 behavior: 'smooth',
-                inline: 'center',
-                block: page === 1 ? 'center' : 'start'
+                inline: 'center'
             })
         }
 
     }, [pageRef, page])
 
 
+    useEffect(() => {
+        if (itemActiveRef.current !== null) {
+            itemActiveRef.current.focus()
+            itemActiveRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            })
+        }
 
+    }, [itemActiveRef, itemActive])
 
 
     return <>
         {
             search ?
 
-                <div className='search_filter_wrapper' ref={searchRef}>
+                <div className='search_filter_wrapper'>
                     <div>
                         {
                             options1?.map(option => option)
@@ -107,7 +115,7 @@ const TableMain = ({
         }
 
 
-        <table className={type} id={id}>
+        <table className={type} id={id} ref={type.split(' ').includes('lineup') ? itemActiveRef : null}>
             {
                 caption ?
                     <caption>
@@ -171,6 +179,7 @@ const TableMain = ({
                                                 <tbody>
                                                     <tr
                                                         className={`${type} click ${itemActive === item.id ? 'active' : ''}`}
+                                                        ref={itemActive === item.id && !type.split(' ').includes('subs') ? itemActiveRef : null}
                                                         onClick={setItemActive ? () => itemActive === item.id ? setItemActive('') : setItemActive(item.id) : null}
                                                     >
                                                         {
