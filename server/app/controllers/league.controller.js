@@ -15,7 +15,7 @@ exports.find = async (req, res, next, app, user_cache) => {
 
 
     const splitLeagues = async (leagues) => {
-        const cutoff = new Date(new Date() - (24 * 60 * 60 * 1000));
+        const cutoff = new Date(new Date() - (3 * 24 * 60 * 60 * 1000));
 
         let leagues_db;
 
