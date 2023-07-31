@@ -3,35 +3,32 @@ const db = require("../models");
 const User = db.users;
 const axios = require('../api/axiosInstance');
 
-exports.create = async (req, res, next, app, user_cache) => {
+exports.create = async (req, res, app) => {
     console.log(`***SEARCHING FOR ${req.query.username}***`)
 
-    const user_from_cache = user_cache.get(req.query.username.toLowerCase())
+    // check if user exists in Sleeper.  Update info if exists, send error message if not.
 
-    if (user_from_cache) {
-        console.log('user/leagues from cache...');
+    const user = await axios.get(`http://api.sleeper.app/v1/user/${req.query.username}`)
 
-        req.data = JSON.parse(user_from_cache)
-        next()
+
+
+    if (user.data?.user_id) {
+        const data = await User.upsert({
+            user_id: user.data.user_id,
+            username: user.data.display_name,
+            avatar: user.data.avatar,
+            type: 'S', // S = 'Searched'
+            updatedAt: new Date()
+
+        })
+
+        req.userData = data[0].dataValues;
+        res.send({
+            user: req.userData,
+            state: app.get('state')
+        })
     } else {
-        // check if user exists in Sleeper.  Update info if exists, send error message if not.
-
-        const user = await axios.get(`http://api.sleeper.app/v1/user/${req.query.username}`)
-
-        if (user.data?.user_id) {
-            const data = await User.upsert({
-                user_id: user.data.user_id,
-                username: user.data.display_name,
-                avatar: user.data.avatar,
-                type: 'S', // S = 'Searched'
-                updatedAt: new Date()
-
-            })
-
-            req.userData = data[0].dataValues;
-            next();
-        } else {
-            res.send({ error: 'User not found' })
-        }
+        res.send({ error: 'User not found' })
     }
 }
+

@@ -5,12 +5,12 @@ module.exports = (app, user_cache) => {
 
     const router = require("express").Router();
 
-    router.post('/find', (req, res) => {
-        leagues.find(req, res, home_cache)
+    router.get('/find', (req, res) => {
+        leagues.find(req, res, app, user_cache)
     });
 
     router.post('/matchups', (req, res) => {
-        leagues.matchups(req, res, home_cache)
+        leagues.matchups(req, res, user_cache)
     });
 
     router.post('/sync', (req, res) => {

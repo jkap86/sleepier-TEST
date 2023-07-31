@@ -12,17 +12,15 @@ export const fetchUser = (username) => {
     return async (dispatch) => {
         dispatch({ type: 'FETCH_USER_START' });
 
-
         try {
             const user = await axios.get('/user/create', {
-                params: {
-                    username: username
-                }
+                params: { username: username }
             });
 
+            console.log(user.data)
 
             if (!user.data?.error) {
-                dispatch({ type: 'FETCH_USER_SUCCESS', payload: user.data });
+                dispatch({ type: 'FETCH_USER_SUCCESS', payload: user.data.user });
 
                 dispatch({ type: 'SET_STATE_MAIN', payload: { state: user.data.state } })
             } else {
@@ -33,6 +31,52 @@ export const fetchUser = (username) => {
         }
     };
 };
+
+export const fetchLeagues = (user_id) => {
+    return async (dispatch) => {
+        dispatch({ type: 'FETCH_LEAGUES_START' })
+
+        try {
+            const response = await fetch(`/league/find?user_id=${encodeURIComponent(user_id)}`, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                },
+            });
+            console.log(response)
+            if (response.ok) {
+                const reader = response.body.getReader();
+
+                let leagues = ''
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    console.log({ done, value })
+                    if (done) break;
+
+                    leagues += new TextDecoder().decode(value);
+
+
+                }
+
+                let parsed_leagues;
+                try {
+                    parsed_leagues = JSON.parse(leagues)
+                } catch (error) {
+                    console.log(error)
+                }
+                console.log(parsed_leagues)
+
+                dispatch({ type: 'FETCH_LEAGUES_SUCCESS', payload: parsed_leagues.flat() });
+
+            } else {
+                dispatch({ type: 'FETCH_LEAGUES_FAILURE', payload: 'Failed to fetch user leagues' });
+            }
+        } catch (error) {
+            dispatch({ type: 'FETCH_LEAGUES_FAILURE', payload: error.message });
+        }
+    }
+}
 
 export const fetchMain = (item) => {
     let expiration;

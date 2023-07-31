@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useCallback, useRef } from "react";
-import { resetState, fetchUser, fetchMain, setState } from "../../actions/actions";
+import { resetState, fetchUser, fetchMain, setState, fetchLeagues } from "../../actions/actions";
 import { openDB } from '../../functions/indexedDB';
 import { fetchFilteredData, fetchLmTrades, fetchPriceCheckTrades, fetchStats, fetchValues, fetchFilteredLmTrades } from "../../actions/actions";
 import { getRecordDict } from "../../functions/getRecordDict";
@@ -20,24 +20,24 @@ const LoadData = ({ tab, player_ids }) => {
     const { rankings, includeTaxi, includeLocked, week, syncing } = useSelector(state => state.lineups)
 
     const hash = `${includeTaxi}-${includeLocked}`;
+    console.log({ projections })
+    useEffect(() => {
+        try {
+            if (params.username !== user.username) {
+                console.log(params.username)
+                dispatch(resetState());
+                dispatch(fetchUser(params.username));
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [params.username])
 
     useEffect(() => {
-        if (!user.user_id) {
-            try {
-                openDB(params.username.toLowerCase(), () => dispatch(fetchUser(params.username)), (value) => {
-
-                    dispatch(setState({ ...value }, 'USER'))
-                    dispatch(setState({ state: value.state }, 'MAIN'))
-                })
-            } catch (error) {
-                console.error(error.message)
-            }
-
-        } else if (params.username.toLowerCase() !== user.username?.toLowerCase()) {
-            console.log('resetting state')
-            dispatch(resetState());
+        if (user?.user_id && leagues.length === 0) {
+            dispatch(fetchLeagues(user.user_id))
         }
-    }, [params.username, user])
+    }, [user])
 
     useEffect(() => {
         openDB('allplayers', () => dispatch(fetchMain('allplayers')), (value) => dispatch(setState({ allplayers: value }, 'MAIN')));
@@ -127,7 +127,7 @@ const LoadData = ({ tab, player_ids }) => {
     useEffect(() => {
         if (projections[week]) {
 
-            if (user?.user_id && (
+            if (user?.user_id && leagues.length > 0 && (
                 (week !== 'All' && (!projectionDict[hash]?.[week] || projections[week]?.edited))
             ) && !isLoadingProjectionDict) {
                 dispatch(setState({ isLoadingProjectionDict: true }, 'MAIN'));

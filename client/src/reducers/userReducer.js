@@ -3,8 +3,10 @@ import { saveToDB } from "../functions/indexedDB";
 const initialState = {
     isLoadingUser: false,
     user: {},
+    isLoadingLeagues: false,
     leagues: [],
     errorUser: null,
+    errorLeagues: null,
     syncing: false,
     errorSyncing: null
 };
@@ -14,36 +16,7 @@ const userReducer = (state = initialState, action) => {
         case 'FETCH_USER_START':
             return { ...state, isLoadingUser: true, errorUser: null };
         case 'FETCH_USER_SUCCESS':
-            const user = action.payload.user;
-
-            const leagues = action.payload.leagues
-                .filter(league => league.rosters
-                    ?.find(r => r.user_id === user.user_id || r.co_owners?.find(co => co?.user_id === user.user_id))
-                )
-                .map(league => {
-                    const userRoster = league.rosters
-                        ?.find(r => r.user_id === user.user_id || r.co_owners?.find(co => co?.user_id === user.user_id))
-
-                    return {
-                        ...league,
-                        userRoster: userRoster,
-                    }
-
-                })
-
-            saveToDB(user.username.toLowerCase(), {
-                timestamp: new Date().getTime() + 15 * 60 * 1000,
-                data: {
-                    user: {
-                        user_id: user.user_id,
-                        username: user.username,
-                        avatar: user.avatar
-                    },
-                    leagues: leagues,
-                    state: action.payload.state
-                }
-            })
-
+            const user = action.payload;
             return {
                 ...state,
                 isLoadingUser: false,
@@ -51,13 +24,43 @@ const userReducer = (state = initialState, action) => {
                     user_id: user.user_id,
                     username: user.username,
                     avatar: user.avatar
-                },
-                leagues: leagues
+                }
 
 
             };
         case 'FETCH_USER_FAILURE':
             return { ...state, isLoadingUser: false, errorUser: action.payload };
+        case 'FETCH_LEAGUES_START':
+            return {
+                ...state,
+                isLoadingLeagues: true,
+                errorLeagues: null
+            };
+        case 'FETCH_LEAGUES_SUCCESS':
+            const leagues = action.payload.filter(league => league.rosters
+                ?.find(r => r.user_id === state.user.user_id || r.co_owners?.find(co => co?.user_id === state.user.user_id))
+            )
+                .map(league => {
+                    const userRoster = league.rosters
+                        ?.find(r => r.user_id === state.user.user_id || r.co_owners?.find(co => co?.user_id === state.user.user_id))
+
+                    return {
+                        ...league,
+                        userRoster: userRoster,
+                    }
+
+                })
+            return {
+                ...state,
+                isLoadingLeagues: false,
+                leagues: leagues
+            };
+        case 'FETCH_LEAGUES_FAILURE':
+            return {
+                ...state,
+                isLoadingLeagues: false,
+                errorLeagues: action.payload
+            };
         case 'SYNC_LEAGUES_START':
             return { ...state, errorSyncing: null };
         case 'SYNC_LEAGUES_SUCCESS':

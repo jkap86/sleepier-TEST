@@ -2,12 +2,12 @@
 const db = require("../models");
 const League = db.leagues;
 const axios = require('../api/axiosInstance');
+const JSONStream = require('JSONStream');
 
-
-exports.find = async (req, res, next, app, user_cache) => {
+exports.find = async (req, res, app, user_cache) => {
     const { updateBatchedLeagues } = require('../helpers/updateLeagues');
 
-    const user_id = req.userData.user_id;
+    const user_id = req.query.user_id;
 
     // get current user leagues and convert to array of league_ids
 
@@ -28,7 +28,7 @@ exports.find = async (req, res, next, app, user_cache) => {
                 raw: true
             })
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
 
         const index = leagues_db?.findIndex(l_db => l_db.updatedAt < cutoff)
@@ -44,41 +44,62 @@ exports.find = async (req, res, next, app, user_cache) => {
         return [leagues_to_add, leagues_to_update, leagues_up_to_date]
     }
 
-    const [leagues_to_add, leagues_to_update, leagues_up_to_date] = await splitLeagues(leagues.data)
+    const processLeaguesStream = async (leagues, stream) => {
+        const [leagues_to_add, leagues_to_update, leagues_up_to_date] = await splitLeagues(leagues)
 
-    const updated_leagues = await updateBatchedLeagues([leagues_to_update, leagues_to_add].flat(), 1)
+        const updated_leagues = await updateBatchedLeagues([leagues_to_update, leagues_to_add].flat(), 1)
 
-    try {
-        await League.bulkCreate(updated_leagues.filter(league => league), {
-            updateOnDuplicate: ["name", "avatar", "settings", "scoring_settings", "roster_positions",
-                "rosters", "drafts", `matchups_${1}`, "updatedAt"]
-        })
-    } catch (error) {
-        console.log(error)
-    }
-
-    const leagues_to_send = [updated_leagues, leagues_up_to_date].flat()
-        .filter(league => league && league.rosters.find(roster => roster?.players?.length > 0))
-        .sort((a, b) => leagues.data.findIndex(x => x.league_id === a.league_id) - leagues.data.findIndex(x => x.league_id === b.league_id))
-
-    const data = {
-        user: req.userData,
-        leagues: leagues_to_send,
-        state: app.get('state')
-    }
-
-    try {
-        if (!updated_leagues.find(league => !league)) {
-            user_cache.set(req.userData.username.toLowerCase(), JSON.stringify(data))
+        try {
+            await League.bulkCreate(updated_leagues.filter(league => league), {
+                updateOnDuplicate: ["name", "avatar", "settings", "scoring_settings", "roster_positions",
+                    "rosters", "drafts", `matchups_${1}`, "updatedAt"]
+            })
+        } catch (error) {
+            console.log(error)
         }
-    } catch (error) {
-        console.log(error.message)
+
+        const leagues_to_send = [updated_leagues, leagues_up_to_date].flat()
+            .filter(league => league && league.rosters.find(roster => roster?.players?.length > 0))
+            .sort((a, b) => leagues.findIndex(x => x.league_id === a.league_id) - leagues.findIndex(x => x.league_id === b.league_id))
+
+
+
+        const data = leagues_to_send;
+
+
+        try {
+            // Stream the JSON data in chunks to the client
+            stream.write(data);
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    req.data = data;
-    next();
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Transfer-Encoding', 'chunked');
+
+    const stream = JSONStream.stringify();
+    stream.pipe(res);
 
 
+    const chunkSize = 25;
+
+    try {
+        for (let i = 0; i < leagues.data.length; i += chunkSize) {
+            const chunk = leagues.data.slice(i, i + chunkSize);
+            await processLeaguesStream(chunk, stream)
+            const used = process.memoryUsage()
+
+            for (let key in used) {
+                console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+            }
+        }
+        stream.end();
+
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 exports.sync = async (req, res, app, user_cache) => {
@@ -139,7 +160,7 @@ exports.picktracker = async (req, res) => {
         league_drafts = await axios.get(`https://api.sleeper.app/v1/league/${req.body.league_id}/drafts`)
         active_draft = league_drafts.data?.find(d => d.settings.slots_k > 0 && d.settings.rounds > league.data.settings.draft_rounds)
     } catch (error) {
-        console.log(error.message)
+        console.log(error)
     }
 
 
