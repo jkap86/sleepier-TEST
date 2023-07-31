@@ -125,7 +125,7 @@ const LoadData = ({ tab, player_ids }) => {
     //  LINEUPS
 
     useEffect(() => {
-        if (projections[week]) {
+        if (projections[week] || week === 'All') {
 
             if (user?.user_id && leagues.length > 0 && (
                 (week !== 'All' && (!projectionDict[hash]?.[week] || projections[week]?.edited))
