@@ -3,7 +3,7 @@
 module.exports = app => {
     const rateLimit = require('express-rate-limit');
     const dynastyrankings = require("../controllers/dynastyrankings.controller.js");
-    const { logMemUsage } = require('../helpers/logMemUsage.js');
+
 
     const dynastyrankingsLimiter = rateLimit({
         windowMs: 10 * 60 * 1000,

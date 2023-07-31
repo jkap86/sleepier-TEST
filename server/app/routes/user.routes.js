@@ -1,14 +1,17 @@
 module.exports = (app, user_cache) => {
     const users = require("../controllers/user.controller.js");
     var router = require("express").Router();
+    const rateLimit = require('express-rate-limit');
 
 
-    router.get(
-        "/create",
-        (req, res, next) => {
-            users.create(req, res, app, user_cache)
-        }
-    )
+    const userLimiter = rateLimit({
+        windowMs: 5 * 1000,
+        max: 2
+    })
+
+    router.get("/create", userLimiter, (req, res, next) => {
+        users.create(req, res, app, user_cache)
+    })
 
 
 

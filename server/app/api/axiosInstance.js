@@ -12,7 +12,9 @@ const axiosInstance = axios.create({
 const axiosRetry = require('axios-retry');
 
 axiosRetry(axiosInstance, {
-    retries: 5, retryDelay: (retryNumber) => {
+    retries: 5,
+    retryCondition: () => true,
+    retryDelay: (retryNumber) => {
         return 2000 + (retryNumber * 1000)
     }
 })
