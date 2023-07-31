@@ -101,20 +101,27 @@ export const fetchMain = (item) => {
         try {
             const main = await axios.get(`/main/${item}`);
 
-            dispatch({ type: 'FETCH_MAIN_SUCCESS', payload: { item: item, data: main.data } });
+            const data = item !== 'projections' ? main.data : main.data.reduce((result, item) => {
+                const { week, player_id, ...stats } = item;
+
+                if (!result[week]) {
+                    result[week] = {};
+                }
+
+                result[week][player_id] = stats;
+                return result;
+            }, {})
+
+            dispatch({
+                type: 'FETCH_MAIN_SUCCESS', payload: {
+                    item: item,
+                    data: data
+                }
+            });
 
             saveToDB(item, {
                 timestamp: new Date().getTime() + expiration,
-                data: item !== 'projections' ? main.data : main.data.reduce((result, item) => {
-                    const { week, player_id, ...stats } = item;
-
-                    if (!result[week]) {
-                        result[week] = {};
-                    }
-
-                    result[week][player_id] = stats;
-                    return result;
-                }, {})
+                data: data
             })
         } catch (error) {
             dispatch({ type: 'FETCH_MAIN_FAILURE', payload: error.message });
