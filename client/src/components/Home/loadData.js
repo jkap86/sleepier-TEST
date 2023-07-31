@@ -125,7 +125,7 @@ const LoadData = ({ tab, player_ids }) => {
     //  LINEUPS
 
     useEffect(() => {
-        if (projections !== {}) {
+        if (projections[week]) {
 
             if (user?.user_id && (
                 (week !== 'All' && (!projectionDict[hash]?.[week] || projections[week]?.edited))
