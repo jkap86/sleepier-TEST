@@ -43,7 +43,7 @@ export const fetchLeagues = (user_id) => {
                     Accept: 'application/json',
                 },
             });
-            console.log(response)
+
             if (response.ok) {
                 const reader = response.body.getReader();
 
@@ -51,7 +51,7 @@ export const fetchLeagues = (user_id) => {
 
                 while (true) {
                     const { done, value } = await reader.read();
-                    console.log({ done, value })
+
                     if (done) break;
 
                     leagues += new TextDecoder().decode(value);

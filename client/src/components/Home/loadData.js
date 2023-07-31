@@ -20,7 +20,7 @@ const LoadData = ({ tab, player_ids }) => {
     const { rankings, includeTaxi, includeLocked, week, syncing } = useSelector(state => state.lineups)
 
     const hash = `${includeTaxi}-${includeLocked}`;
-    console.log({ projections })
+
     useEffect(() => {
         try {
             if (params.username !== user.username) {

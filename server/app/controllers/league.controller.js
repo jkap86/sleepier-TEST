@@ -15,7 +15,7 @@ exports.find = async (req, res, app, user_cache) => {
 
 
     const splitLeagues = async (leagues) => {
-        const cutoff = new Date(new Date() - (3 * 24 * 60 * 60 * 1000));
+        const cutoff = new Date(new Date() - (24 * 60 * 60 * 1000));
 
         let leagues_db;
 
@@ -89,12 +89,14 @@ exports.find = async (req, res, app, user_cache) => {
         for (let i = 0; i < leagues.data.length; i += chunkSize) {
             const chunk = leagues.data.slice(i, i + chunkSize);
             await processLeaguesStream(chunk, stream)
-            const used = process.memoryUsage()
 
-            for (let key in used) {
-                console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
-            }
         }
+        const used = process.memoryUsage()
+
+        for (let key in used) {
+            console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+        }
+
         stream.end();
 
     } catch (error) {
