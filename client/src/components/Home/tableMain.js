@@ -115,7 +115,7 @@ const TableMain = ({
         }
 
 
-        <table className={type} id={id} ref={type.split(' ').includes('lineup') ? itemActiveRef : null}>
+        <table className={type} id={id} >
             {
                 caption ?
                     <caption>
@@ -179,7 +179,7 @@ const TableMain = ({
                                                 <tbody>
                                                     <tr
                                                         className={`${type} click ${itemActive === item.id ? 'active' : ''}`}
-                                                        ref={itemActive === item.id && !type.split(' ').includes('subs') ? itemActiveRef : null}
+                                                        ref={(itemActive === item.id && !type.split(' ').includes('lineup')) ? itemActiveRef : null}
                                                         onClick={setItemActive ? () => itemActive === item.id ? setItemActive('') : setItemActive(item.id) : null}
                                                     >
                                                         {
