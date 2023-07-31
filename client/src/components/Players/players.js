@@ -1,6 +1,6 @@
 import LoadData from "../Home/loadData";
 import Heading from "../Home/heading";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import TableMain from "../Home/tableMain";
 import { filterLeagues } from '../../functions/filterLeagues';
@@ -27,7 +27,23 @@ const Players = () => {
 
     const filteredLeagueCount = filterLeagues((leagues || []), type1, type2)?.length
 
+    useEffect(() => {
+        if (modalRef.current) {
+            modalRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            })
+        }
+    }, [modalVisible.options])
 
+    useEffect(() => {
+        if (playerModalRef.current) {
+            playerModalRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            })
+        }
+    }, [modalVisible.player])
 
     const playerShares_headers = [
         [
