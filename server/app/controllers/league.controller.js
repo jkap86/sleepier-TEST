@@ -11,8 +11,21 @@ exports.find = async (req, res, app, user_cache) => {
 
     // get current user leagues and convert to array of league_ids
 
-    let leagues = await axios.get(`https://api.sleeper.app/v1/user/${user_id}/leagues/nfl/${2023}`)
+    let leagues;
+    let retries = 0;
 
+    try {
+        leagues = await axios.get(`https://api.sleeper.app/v1/user/${user_id}/leagues/nfl/${2023}`)
+    } catch (error) {
+        if (retries <= 3) {
+            retries += 1
+            setTimeout(async () => {
+                leagues = await axios.get(`https://api.sleeper.app/v1/user/${user_id}/leagues/nfl/${2023}`)
+            }, retries * 1000)
+        } else {
+            leagues = { data: [] }
+        }
+    }
 
     const splitLeagues = async (leagues) => {
         const cutoff = new Date(new Date() - (24 * 60 * 60 * 1000));

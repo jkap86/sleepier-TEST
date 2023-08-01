@@ -16,7 +16,7 @@ exports.create = async (req, res, app) => {
             retries += 1
             setTimeout(async () => {
                 user = await axios.get(`http://api.sleeper.app/v1/user/${req.query.username}`)
-            }, 2000)
+            }, retries * 1000)
         }
     }
 

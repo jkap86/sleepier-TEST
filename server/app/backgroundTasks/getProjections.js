@@ -36,39 +36,41 @@ module.exports = async (app) => {
         const projections = []
 
         for (let i = week; i < 19; i++) {
-            const projections_week = await axios.get(`https://api.sleeper.com/projections/nfl/${season}/${i}?season_type=regular&position[]=QB&position[]=RB&position[]=TE&position[]=WR&order_by=ppr`)
+            for (const position of ['QB', 'RB', 'WR', 'TE']) {
+                const projections_week = await axios.get(`https://api.sleeper.com/projections/nfl/${season}/${i}?season_type=regular&position[]=${position}&order_by=ppr`)
 
-            const ppr_scoring_settings = {
-                'pass_yd': 0.04,
-                'pass_td': 4,
-                'pass_2pt': 2,
-                'pass_int': -1,
-                'rush_yd': 0.1,
-                'rush_2pt': 2,
-                'rush_td': 6,
-                'rec': 1,
-                'rec_yd': 0.1,
-                'rec_2pt': 2,
-                'rec_td': 6,
-                'fum_lost': -2
-            }
+                const ppr_scoring_settings = {
+                    'pass_yd': 0.04,
+                    'pass_td': 4,
+                    'pass_2pt': 2,
+                    'pass_int': -1,
+                    'rush_yd': 0.1,
+                    'rush_2pt': 2,
+                    'rush_td': 6,
+                    'rec': 1,
+                    'rec_yd': 0.1,
+                    'rec_2pt': 2,
+                    'rec_td': 6,
+                    'fum_lost': -2
+                }
 
-            const projections_totals = projections_week.data
-                .filter(p => p.stats.pts_ppr)
-                .map(p => {
-                    const ppr_score = getPlayerScore([p], ppr_scoring_settings, true)
-                    return {
-                        week: i,
-                        player_id: p.player_id,
-                        stats: {
-                            ...p.stats,
-                            pts_ppr: ppr_score
+                const projections_totals = projections_week.data
+                    .filter(p => p.stats.pts_ppr)
+                    .map(p => {
+                        const ppr_score = getPlayerScore([p], ppr_scoring_settings, true)
+                        return {
+                            week: i,
+                            player_id: p.player_id,
+                            stats: {
+                                ...p.stats,
+                                pts_ppr: ppr_score
+                            }
                         }
-                    }
-                })
+                    })
 
-            projections.push(...projections_totals)
+                projections.push(...projections_totals)
 
+            }
             console.log(`Projections updated for Week ${i}`)
         }
         console.log('Projections Update Complete')

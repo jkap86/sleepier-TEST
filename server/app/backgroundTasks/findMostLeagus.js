@@ -36,10 +36,6 @@ module.exports = async (app) => {
                 group: ['user.user_id']
             })
 
-            console.log({
-                count: users.length,
-                user: users[0]
-            })
             app.set('top_users', users.slice(0, 100))
         } catch (err) {
             console.log(err)
@@ -48,7 +44,7 @@ module.exports = async (app) => {
 
     setTimeout(() => {
         getTopUsers()
-    }, 5000)
+    }, 2000)
 
     setInterval(() => {
         getTopUsers()
