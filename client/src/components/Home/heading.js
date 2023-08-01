@@ -9,12 +9,14 @@ const Heading = ({ tab }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const params = useParams();
-    const { user, leagues } = useSelector(state => state.user);
+    const { user, leagues, isLoadingLeagues, progress } = useSelector(state => state.user);
     const { state, type1, type2, } = useSelector(state => state.main);
 
 
 
-    const filteredLeagueCount = filterLeagues((leagues || []), type1, type2)?.length
+    const filteredLeagueCount = isLoadingLeagues
+        ? progress
+        : filterLeagues((leagues || []), type1, type2)?.length
 
 
     return !user?.user_id ? '' : <>

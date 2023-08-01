@@ -54,9 +54,18 @@ export const fetchLeagues = (user_id) => {
 
                     if (done) break;
 
+
                     leagues += new TextDecoder().decode(value);
 
+                    const matches = leagues.match(/"league_id":/g);
 
+                    let count = 0;
+
+                    if (matches && matches.length > 0) {
+                        count = matches.length
+                    }
+
+                    dispatch({ type: 'SET_STATE_USER', payload: { progress: count } })
                 }
 
                 let parsed_leagues;

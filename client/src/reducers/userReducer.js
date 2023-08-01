@@ -5,6 +5,7 @@ const initialState = {
     user: {},
     isLoadingLeagues: false,
     leagues: [],
+    progress: 0,
     errorUser: null,
     errorLeagues: null,
     syncing: false,
