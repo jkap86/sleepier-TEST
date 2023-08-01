@@ -22,11 +22,6 @@ module.exports = async (app) => {
                                         [Sequelize.Op.contains]: { players: null }
                                     }
                                 }
-                            },
-                            {
-                                settings: {
-                                    status: 'in_season'
-                                }
                             }
                         ]
                     },
