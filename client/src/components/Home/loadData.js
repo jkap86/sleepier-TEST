@@ -10,7 +10,7 @@ import { getRecordDict } from "../../functions/getRecordDict";
 const LoadData = ({ tab, player_ids }) => {
     const params = useParams();
     const dispatch = useDispatch();
-    const { user, leagues } = useSelector((state) => state.user);
+    const { user, leagues, errorUser } = useSelector((state) => state.user);
     const { state, projectionDict, isLoadingProjectionDict, projections, schedule, allplayers } = useSelector(state => state.main);
     const { filteredData } = useSelector(state => state.filteredData);
     const { trendDateStart, trendDateEnd } = useSelector(state => state.players);
@@ -22,8 +22,20 @@ const LoadData = ({ tab, player_ids }) => {
     const hash = `${includeTaxi}-${includeLocked}`;
 
     useEffect(() => {
+        if (!filteredData[tab]) {
+            // Disable scroll when the component mounts
+            document.body.style.overflow = 'hidden';
+
+            // Enable scroll when the component unmounts
+            return () => {
+                document.body.style.overflow = 'auto';
+            };
+        }
+    }, [filteredData]);
+
+    useEffect(() => {
         try {
-            if (params.username.toLowerCase() !== user.username?.toLowerCase()) {
+            if (params.username.toLowerCase() !== user.username?.toLowerCase() && !errorUser) {
                 console.log(params.username)
                 dispatch(resetState());
                 dispatch(fetchUser(params.username));

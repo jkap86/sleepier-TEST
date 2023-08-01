@@ -7,9 +7,18 @@ exports.create = async (req, res, app) => {
     console.log(`***SEARCHING FOR ${req.query.username}***`)
 
     // check if user exists in Sleeper.  Update info if exists, send error message if not.
-
-    const user = await axios.get(`http://api.sleeper.app/v1/user/${req.query.username}`)
-
+    let user;
+    let retries = 0;
+    try {
+        user = await axios.get(`http://api.sleeper.app/v1/user/${req.query.username}`)
+    } catch (error) {
+        if (retries <= 3) {
+            retries += 1
+            setTimeout(async () => {
+                user = await axios.get(`http://api.sleeper.app/v1/user/${req.query.username}`)
+            }, 2000)
+        }
+    }
 
 
     if (user.data?.user_id) {

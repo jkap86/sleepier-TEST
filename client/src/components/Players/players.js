@@ -16,7 +16,7 @@ import PlayerModal from "./playerModal";
 
 const Players = () => {
     const dispatch = useDispatch();
-    const { user, leagues } = useSelector(state => state.user);
+    const { errorUser, leagues } = useSelector(state => state.user);
     const { type1, type2, allplayers, state } = useSelector(state => state.main);
     const { filteredData } = useSelector(state => state.filteredData);
     const { modalVisible, statType1, statType2, page, searched, itemActive, trendDateStart, trendDateEnd, filters, sortBy, snapPercentageMin, snapPercentageMax } = useSelector(state => state.players);
@@ -382,72 +382,75 @@ const Players = () => {
         <LoadData tab={'players'} player_ids={player_ids} />
         <Heading tab={'players'} />
         {
-            !filteredData.players ? loadingIcon :
-                <>
-                    {
-                        modalVisible.options ?
-                            <TrendModal
-                                modalRef={modalRef}
-                            />
-                            :
-                            null
-                    }
-                    <div className="trend-range">
-                        <label className="sort">
-                            <i class="fa-solid fa-beat fa-sort click"></i>
-                            <select
-                                className="hidden_behind click"
-                                onChange={(e) => dispatch(setState({ sortBy: e.target.value }, 'PLAYERS'))}
-                                value={sortBy}
-                            >
-                                <option>OWNED</option>
-                                <option>{statType1.replace(/_/g, ' ')}</option>
-                                <option>{statType2.replace(/_/g, ' ')}</option>
-                                <option>PPG</option>
-                                <option>GP</option>
-                            </select>
-                        </label>
-                        &nbsp;
-                        {new Date(new Date(trendDateStart).getTime() + new Date().getTimezoneOffset() * 60000).toLocaleDateString('en-US', { year: '2-digit', month: 'numeric', day: 'numeric' })}
-                        &nbsp;-&nbsp;
-                        {new Date(new Date(trendDateEnd).getTime() + new Date().getTimezoneOffset() * 60000).toLocaleDateString('en-US', { year: '2-digit', month: 'numeric', day: 'numeric' })}
-                        &nbsp;<label className="sort">
-                            <i
-                                className="fa-solid fa-filter fa-beat click"
-                                onClick={async () => dispatch(setState({ modalVisible: { options: true, player: false, player2: false } }, 'PLAYERS'))}
-                            >
-                            </i>
-                        </label>
-                    </div>
-                    {
-                        !modalVisible.player ?
-                            null
-                            :
-                            <div className="modal"  >
-                                <PlayerModal
-                                    setPlayerModalVisible={(value) => dispatch(setState({ modalVisible: { options: false, player: value, player2: false } }, 'PLAYERS'))}
-                                    player={modalVisible.player}
-                                    getPlayerScore={getPlayerScore}
-                                    ref={playerModalRef}
+            errorUser
+                ? <h1 className="error">{errorUser.error}</h1>
+                : !filteredData.players
+                    ? loadingIcon :
+                    <>
+                        {
+                            modalVisible.options ?
+                                <TrendModal
+                                    modalRef={modalRef}
                                 />
-                            </div>
-                    }
-                    <TableMain
-                        id={'Players'}
-                        type={'primary'}
-                        headers={playerShares_headers}
-                        body={playerShares_body}
-                        page={page}
-                        setPage={(page) => dispatch(setState({ page: page }, 'PLAYERS'))}
-                        itemActive={itemActive}
-                        setItemActive={(item) => dispatch(setState({ itemActive: item }, 'PLAYERS'))}
-                        search={true}
-                        searched={searched}
-                        setSearched={(searched) => dispatch(setState({ searched: searched }, 'PLAYERS'))}
-                        options1={[teamFilter]}
-                        options2={[positionFilter, draftClassFilter]}
-                    />
-                </>
+                                :
+                                null
+                        }
+                        <div className="trend-range">
+                            <label className="sort">
+                                <i class="fa-solid fa-beat fa-sort click"></i>
+                                <select
+                                    className="hidden_behind click"
+                                    onChange={(e) => dispatch(setState({ sortBy: e.target.value }, 'PLAYERS'))}
+                                    value={sortBy}
+                                >
+                                    <option>OWNED</option>
+                                    <option>{statType1.replace(/_/g, ' ')}</option>
+                                    <option>{statType2.replace(/_/g, ' ')}</option>
+                                    <option>PPG</option>
+                                    <option>GP</option>
+                                </select>
+                            </label>
+                            &nbsp;
+                            {new Date(new Date(trendDateStart).getTime() + new Date().getTimezoneOffset() * 60000).toLocaleDateString('en-US', { year: '2-digit', month: 'numeric', day: 'numeric' })}
+                            &nbsp;-&nbsp;
+                            {new Date(new Date(trendDateEnd).getTime() + new Date().getTimezoneOffset() * 60000).toLocaleDateString('en-US', { year: '2-digit', month: 'numeric', day: 'numeric' })}
+                            &nbsp;<label className="sort">
+                                <i
+                                    className="fa-solid fa-filter fa-beat click"
+                                    onClick={async () => dispatch(setState({ modalVisible: { options: true, player: false, player2: false } }, 'PLAYERS'))}
+                                >
+                                </i>
+                            </label>
+                        </div>
+                        {
+                            !modalVisible.player ?
+                                null
+                                :
+                                <div className="modal"  >
+                                    <PlayerModal
+                                        setPlayerModalVisible={(value) => dispatch(setState({ modalVisible: { options: false, player: value, player2: false } }, 'PLAYERS'))}
+                                        player={modalVisible.player}
+                                        getPlayerScore={getPlayerScore}
+                                        ref={playerModalRef}
+                                    />
+                                </div>
+                        }
+                        <TableMain
+                            id={'Players'}
+                            type={'primary'}
+                            headers={playerShares_headers}
+                            body={playerShares_body}
+                            page={page}
+                            setPage={(page) => dispatch(setState({ page: page }, 'PLAYERS'))}
+                            itemActive={itemActive}
+                            setItemActive={(item) => dispatch(setState({ itemActive: item }, 'PLAYERS'))}
+                            search={true}
+                            searched={searched}
+                            setSearched={(searched) => dispatch(setState({ searched: searched }, 'PLAYERS'))}
+                            options1={[teamFilter]}
+                            options2={[positionFilter, draftClassFilter]}
+                        />
+                    </>
         }
     </>
 }
