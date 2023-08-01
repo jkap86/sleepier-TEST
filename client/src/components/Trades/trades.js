@@ -5,6 +5,7 @@ import '../../css/css/trades.css';
 import Heading from '../Home/heading';
 import LmTrades from "./lmTrades";
 import PcTrades from "./pcTrades";
+import LoadData from '../Home/loadData';
 
 const Trades = () => {
     const dispatch = useDispatch();

@@ -21,17 +21,7 @@ const LoadData = ({ tab, player_ids }) => {
 
     const hash = `${includeTaxi}-${includeLocked}`;
 
-    useEffect(() => {
-        if (!filteredData[tab]) {
-            // Disable scroll when the component mounts
-            document.body.style.overflow = 'hidden';
-
-            // Enable scroll when the component unmounts
-            return () => {
-                document.body.style.overflow = 'auto';
-            };
-        }
-    }, [filteredData]);
+    console.log(tab)
 
     useEffect(() => {
         try {
