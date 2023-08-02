@@ -5,7 +5,7 @@ import HeadingROF from './headingROF';
 import StandingsROF from "./standingsROF";
 
 
-const MainROF = () => {
+const MainROF = ({ pool, title, startSeason }) => {
     const [stateState, setStateState] = useState({});
     const [stateAllPlayers, setStateAllPlayers] = useState([]);
     const [stateStandings, setStateStandings] = useState()
@@ -13,7 +13,7 @@ const MainROF = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const home_data = await axios.get('/rof/home')
+            const home_data = await axios.get('/pools/home')
 
 
             setStateState(home_data.data.state)
@@ -26,7 +26,7 @@ const MainROF = () => {
 
     useEffect(() => {
         const fetchStandings = async () => {
-            const standings = await axios.post('/rof/standings', {
+            const standings = await axios.post(`/pools/${pool}`, {
                 season: stateSeason
             })
             setStateStandings(standings.data)
@@ -43,6 +43,9 @@ const MainROF = () => {
             state={stateState}
             stateSeason={stateSeason}
             setStateSeason={setStateSeason}
+            title={title}
+            startSeason={startSeason}
+            pool={pool}
         />
         <StandingsROF
             stateAllPlayers={stateAllPlayers}

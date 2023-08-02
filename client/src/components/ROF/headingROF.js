@@ -1,10 +1,15 @@
 import volcano from '../../images/volcano.png';
+import shark from '../../images/shark.jpg';
 
 const HeadingROF = ({
     stateState,
     stateSeason,
-    setStateSeason
+    setStateSeason,
+    pool,
+    title,
+    startSeason
 }) => {
+
 
     const seasons = <select
         className="nav click"
@@ -14,11 +19,11 @@ const HeadingROF = ({
         {
             Array.from(
                 Array(
-                    parseInt(stateState?.league_season || new Date().getFullYear()) - 2020
+                    parseInt(stateState?.league_season || new Date().getFullYear()) - parseInt(startSeason - 1)
                 ).keys()
             )
                 .map(key =>
-                    <option>{key + 2021}</option>
+                    <option>{key + startSeason}</option>
                 )
         }
 
@@ -30,11 +35,14 @@ const HeadingROF = ({
         <h1>
             <p className="image">
                 <img
-                    src={volcano}
+                    src={pool === 'osr' ? shark
+                        : pool === 'rof' ? volcano
+                            : null}
                     alt="volcano"
+                    className='pool'
                 />
-                <strong>
-                    Ring of Fire
+                <strong className='pool'>
+                    {title}
                 </strong>
             </p>
         </h1>

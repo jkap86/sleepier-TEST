@@ -15,7 +15,7 @@ exports.home = (req, res, app) => {
     })
 }
 
-exports.standings = async (req, res) => {
+exports.standings = async (req, res, league_ids, pool_name) => {
     const getDraftPicks = (traded_picks, rosters, users, drafts, league) => {
         let draft_season;
         if (drafts.find(x => x.status === 'complete' && x.settings.rounds === league.settings.draft_rounds)) {
@@ -85,29 +85,26 @@ exports.standings = async (req, res) => {
         return original_picks
     }
 
-    const getStandingsROF = async (season) => {
-        console.log(`Getting ROF standings for ${season}...`)
-
-        const leagues = await axios.get(`https://api.sleeper.app/v1/user/435483482039250944/leagues/nfl/${season}`)
-        let leaguesROF = leagues.data.filter(x => x.name.includes('Ring of Fire: '))
+    const getStandingsPool = async (season) => {
+        console.log(`Getting ${pool_name} standings for ${season}...`)
 
         console.log({
             season: season
         })
         let rostersROF = []
 
-        await Promise.all(leaguesROF.map(async league => {
-            const [rosters, users, traded_picks_current, drafts] = await Promise.all([
-                await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/rosters`),
-                await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/users`),
-                await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/traded_picks`),
-                await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/drafts`)
+        await Promise.all(league_ids.map(async league_id => {
+            const [league, rosters, users, traded_picks_current, drafts] = await Promise.all([
+                await axios.get(`https://api.sleeper.app/v1/league/${league_id}`),
+                await axios.get(`https://api.sleeper.app/v1/league/${league_id}/rosters`),
+                await axios.get(`https://api.sleeper.app/v1/league/${league_id}/users`),
+                await axios.get(`https://api.sleeper.app/v1/league/${league_id}/traded_picks`),
+                await axios.get(`https://api.sleeper.app/v1/league/${league_id}/drafts`)
             ])
-            let draft_picks = getDraftPicks(traded_picks_current.data, rosters.data, users.data, drafts.data, league)
+            let draft_picks = getDraftPicks(traded_picks_current.data, rosters.data, users.data, drafts.data, league.data)
             rosters.data.map(roster => {
                 rostersROF.push({
                     ...roster,
-                    ...league,
                     rosters: rosters.data.map(r => {
                         const user = users.data.find(x => x.user_id === r.owner_id)
                         return {
@@ -118,10 +115,10 @@ exports.standings = async (req, res) => {
                             draft_picks: draft_picks[r.roster_id]
                         }
                     }),
-                    scoring_settings: league.scoring_settings,
+                    scoring_settings: league.data.scoring_settings,
                     draft_picks: draft_picks[roster.roster_id],
-                    league_name: league.name,
-                    league_avatar: league.avatar,
+                    league_name: league.data.name,
+                    league_avatar: league.data.avatar,
                     username: roster.owner_id > 0 ? users.data.find(x => x.user_id === roster.owner_id).display_name : 'orphan',
                     user_avatar: roster.owner_id > 0 ? users.data.find(x => x.user_id === roster.owner_id).avatar : null,
                     wins: roster.settings.wins,
@@ -134,19 +131,19 @@ exports.standings = async (req, res) => {
             })
         }))
 
-        console.log(`ROF standings update for ${season} complete...`)
+        console.log(`${pool_name} standings update for ${season} complete...`)
 
         return rostersROF
     }
 
-    const standings_cache = cache.get(`standingsROF_${req.body.season}`)
+    const standings_cache = cache.get(`standings_${pool_name}_${req.body.season}`)
 
     if (standings_cache) {
         res.send(standings_cache)
     } else {
-        const standings = await getStandingsROF(req.body.season)
+        const standings = await getStandingsPool(req.body.season)
 
-        cache.set(`standingsROF_${req.body.season}`, standings, 6 * 60 * 60)
+        cache.set(`standings_${pool_name}_${req.body.season}`, standings, 6 * 60 * 60)
         res.send(standings)
     }
 }

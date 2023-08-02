@@ -21,7 +21,8 @@ function App() {
           <Route path='/:username/leaguemates' element={<Leaguemates />} />
           <Route path='/:username/lineups' element={<Lineups />} />
           <Route path='/picktracker/:league_id' element={<PickTracker />} />
-          <Route path='/pools/rof' element={<MainROF />} />
+          <Route path='/pools/rof' element={<MainROF pool={'rof'} title={'Ring of Fire'} startSeason={2021} />} />
+          <Route path='/pools/osr' element={<MainROF pool={'osr'} title={'Save the Sharks'} startSeason={2020} />} />
         </Routes>
       </BrowserRouter>
     </div>
