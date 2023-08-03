@@ -1,44 +1,48 @@
 
 
 
-export const openDB = async (item, fetch, setState) => {
-    const request = window.indexedDB.open(item, 1);
+export const openDB = async (field, items, fetch, setState) => {
+    const request = window.indexedDB.open(field, 1);
 
     request.onupgradeneeded = (event) => {
         console.log('upgradeneeded')
         const db = event.target.result;
 
         // Create the object store if it doesn't exist
-        if (!db.objectStoreNames.contains(item)) {
-            db.createObjectStore(item, { keyPath: 'timestamp', autoIncrement: false });
-        }
+        items.forEach(item => {
+            if (!db.objectStoreNames.contains(item)) {
+                db.createObjectStore(item, { keyPath: 'timestamp', autoIncrement: false });
+            }
+        })
     };
 
     request.onsuccess = (event) => {
         const db = event.target.result;
 
-        try {
-            const transaction = db.transaction([item], 'readonly');
-            const objectStore = transaction.objectStore(item);
-            const getAllRequest = objectStore.getAll();
+        items.forEach(item => {
+            try {
+                const transaction = db.transaction([item], 'readonly');
+                const objectStore = transaction.objectStore(item);
+                const getAllRequest = objectStore.getAll();
 
-            getAllRequest.onsuccess = (event) => {
-                if (!(event.target.result[0]?.timestamp > new Date().getTime())) {
-                    console.log('fetching ' + item)
-                    fetch()
-                } else {
-                    setState(event.target.result[0].data);
-                }
-            };
+                getAllRequest.onsuccess = (event) => {
+                    if (!(event.target.result[0]?.timestamp > new Date().getTime())) {
+                        console.log('fetching ' + item)
+                        fetch(item)
+                    } else {
+                        setState(item, event.target.result[0].data);
+                    }
+                };
 
-            getAllRequest.onerror = (event) => {
-                console.log('Error reading data from IndexedDB: ', event.target.error);
-            };
-        } catch (error) {
-            console.log('fetching ' + item)
-            fetch()
-            console.log(error.message)
-        }
+                getAllRequest.onerror = (event) => {
+                    console.log('Error reading data from IndexedDB: ', event.target.error);
+                };
+            } catch (error) {
+                console.log('fetching ' + item)
+                fetch(item)
+                console.log(error.message)
+            }
+        });
     };
 
     request.onerror = (event) => {
@@ -46,8 +50,8 @@ export const openDB = async (item, fetch, setState) => {
     };
 };
 
-export const saveToDB = async (item, data) => {
-    const request = window.indexedDB.open(item, 1);
+export const saveToDB = async (field, item, data) => {
+    const request = window.indexedDB.open(field, 1);
 
     request.onupgradeneeded = (event) => {
         const db = event.target.result;

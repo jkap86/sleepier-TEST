@@ -87,7 +87,7 @@ export const fetchLeagues = (user_id) => {
     }
 }
 
-export const fetchMain = (item) => {
+export const fetchMain = (field, item) => {
     let expiration;
 
     switch (item) {
@@ -128,7 +128,7 @@ export const fetchMain = (item) => {
                 }
             });
 
-            saveToDB(item, {
+            saveToDB(field, item, {
                 timestamp: new Date().getTime() + expiration,
                 data: data
             })

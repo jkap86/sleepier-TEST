@@ -37,16 +37,18 @@ const LoadData = ({ tab, player_ids }) => {
 
     useEffect(() => {
         if (user?.user_id && leagues.length === 0) {
-            dispatch(fetchLeagues(user.user_id))
+            //  dispatch(fetchLeagues(user.user_id))
+            openDB(user.user_id, ['leagues'], () => dispatch(fetchLeagues(user.user_id)), (item, value) => dispatch(setState({ leagues: value }, 'USER')));
         }
     }, [user])
 
     useEffect(() => {
-        openDB('allplayers', () => dispatch(fetchMain('allplayers')), (value) => dispatch(setState({ allplayers: value }, 'MAIN')));
-        openDB('schedule', () => dispatch(fetchMain('schedule')), (value) => dispatch(setState({ schedule: value }, 'MAIN')));
+        openDB('main', ['allplayers', 'schedule', 'projections'], (item) => dispatch(fetchMain('main', item)), (item, value) => dispatch(setState({ [item]: value }, 'MAIN')));
 
 
-        openDB('projections', () => dispatch(fetchMain('projections')), (value) => dispatch(setState({ projections: value }, 'MAIN')));
+        //  openDB('main', 'schedule', () => dispatch(fetchMain('main', 'allplayers')), (value) => dispatch(setState({ schedule: value }, 'MAIN')));
+
+        //  openDB('main', 'projections', () => dispatch(fetchMain('main', 'allplayers')), (value) => dispatch(setState({ projections: value }, 'MAIN')));
 
     }, [])
 

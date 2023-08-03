@@ -51,6 +51,11 @@ const userReducer = (state = initialState, action) => {
                     }
 
                 })
+
+            saveToDB(state.user.user_id, 'leagues', {
+                timestamp: new Date().getTime() + 15 * 60 * 1000,
+                data: leagues
+            })
             return {
                 ...state,
                 isLoadingLeagues: false,
