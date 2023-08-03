@@ -141,8 +141,13 @@ exports.standings = async (req, res, league_ids, pool_name) => {
     if (standings_cache) {
         res.send(standings_cache)
     } else {
-        const standings = await getStandingsPool(req.body.season)
+        let standings;
 
+        try {
+            standings = await getStandingsPool(req.body.season)
+        } catch (error) {
+            console.log(`Error processing ${pool_name} leagues... ` + error.message)
+        }
         cache.set(`standings_${pool_name}_${req.body.season}`, standings, 6 * 60 * 60)
         res.send(standings)
     }
