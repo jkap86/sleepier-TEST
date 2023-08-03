@@ -110,7 +110,7 @@ export const fetchMain = (item) => {
         try {
             const main = await axios.get(`/main/${item}`);
 
-            const data = item !== 'projections' ? main.data : main.data.reduce((result, item) => {
+            const data = item !== 'projections' ? main.data[0] : main.data[0].reduce((result, item) => {
                 const { week, player_id, ...stats } = item;
 
                 if (!result[week]) {
