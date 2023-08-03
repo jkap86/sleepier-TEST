@@ -61,12 +61,14 @@ const TableMain = ({
                     <Search
                         id={id}
                         placeholder={`Search ${id}`}
-                        list={body?.map(b => {
-                            return {
-                                ...b.search,
-                                id: b.id
-                            }
-                        })}
+                        list={body
+                            ?.filter((b, index) => b.search.text !== 'orphan' || !body.slice(0, index).find(x => x.search.text === 'orphan'))
+                            ?.map(b => {
+                                return {
+                                    ...b.search,
+                                    id: b.id
+                                }
+                            })}
                         searched={searched}
                         setSearched={setSearched}
                     />

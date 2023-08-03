@@ -1,13 +1,12 @@
 'use strict'
 const axios = require('../api/axiosInstance');
 const NodeCache = require('node-cache');
-
+const allplayers = require('../../allplayers.json');
 const cache = new NodeCache()
 
 
 exports.home = (req, res, app) => {
     const state = app.get('state')
-    const allplayers = app.get('allplayers')
 
     res.send({
         state: state,
@@ -116,6 +115,7 @@ exports.standings = async (req, res, league_ids, pool_name) => {
                         }
                     }),
                     scoring_settings: league.data.scoring_settings,
+                    roster_positions: league.data.roster_positions,
                     draft_picks: draft_picks[roster.roster_id],
                     league_name: league.data.name,
                     league_avatar: league.data.avatar,

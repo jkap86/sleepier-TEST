@@ -11,7 +11,7 @@ const StandingsROF = ({
     const [page, setPage] = useState(1)
     const [itemActive, setItemActive] = useState('');
 
-    console.log(searched)
+    console.log(stateAllPlayers)
 
     const headers = [
         [
@@ -44,7 +44,7 @@ const StandingsROF = ({
 
     const standingsBody = (stateStandings || [])
         .sort((a, b) => b.wins - a.wins || a.losses - b.losses || b.fpts - a.fpts)
-        .filter(x => !searched.id || (searched.id === x.league_name + '_' + x.roster_id))
+        .filter(x => !searched.id || (searched.text !== 'orphan' && searched.id === x.league_name + '_' + x.roster_id) || (searched.text === 'orphan' && x.username === 'orphan'))
         .map((team, index) => {
             return {
                 id: team.league_name + '_' + team.roster_id,

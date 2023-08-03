@@ -14,7 +14,8 @@ const LeagueInfo = ({
     snapPercentageMin,
     snapPercentageMax,
     standings,
-    trendStats
+    trendStats,
+    allplayers
 }) => {
     const dispatch = useDispatch();
     const { allplayers: stateAllPlayers } = useSelector(state => state.main)
@@ -124,10 +125,10 @@ const LeagueInfo = ({
 
     const display = active_roster?.players ?
         secondaryContent === 'Lineup' ? [...active_roster?.starters, ...active_roster?.players?.filter(p => !active_roster?.starters?.includes(p))] || []
-            : secondaryContent === 'QBs' ? active_roster?.players?.filter(x => stateAllPlayers[x]?.position === 'QB') || []
-                : secondaryContent === 'RBs' ? active_roster?.players?.filter(x => stateAllPlayers[x]?.position === 'RB') || []
-                    : secondaryContent === 'WRs' ? active_roster?.players?.filter(x => stateAllPlayers[x]?.position === 'WR') || []
-                        : secondaryContent === 'TEs' ? active_roster?.players?.filter(x => stateAllPlayers[x]?.position === 'TE') || []
+            : secondaryContent === 'QBs' ? active_roster?.players?.filter(x => (allplayers || stateAllPlayers)[x]?.position === 'QB') || []
+                : secondaryContent === 'RBs' ? active_roster?.players?.filter(x => (allplayers || stateAllPlayers)[x]?.position === 'RB') || []
+                    : secondaryContent === 'WRs' ? active_roster?.players?.filter(x => (allplayers || stateAllPlayers)[x]?.position === 'WR') || []
+                        : secondaryContent === 'TEs' ? active_roster?.players?.filter(x => (allplayers || stateAllPlayers)[x]?.position === 'TE') || []
                             : []
         : []
 
@@ -167,11 +168,11 @@ const LeagueInfo = ({
             list: [
                 {
                     text: secondaryContent === 'Lineup' ? (position_abbrev[league.roster_positions[index]] || 'BN')
-                        : stateAllPlayers[starter]?.position,
+                        : (allplayers || stateAllPlayers)[starter]?.position,
                     colSpan: 5
                 },
                 {
-                    text: stateAllPlayers[starter]?.full_name || 'Empty',
+                    text: (allplayers || stateAllPlayers)[starter]?.full_name || 'Empty',
                     colSpan: 12,
                     className: 'left',
                     image: {
@@ -194,7 +195,7 @@ const LeagueInfo = ({
                                     )
                                         .toFixed(1) || '-'
                                 ) : (
-                                    stateAllPlayers[starter]?.age
+                                    (allplayers || stateAllPlayers)[starter]?.age
                                 )
                         }
                     </span>,
