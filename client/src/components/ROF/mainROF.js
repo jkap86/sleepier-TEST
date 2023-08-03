@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import HeadingROF from './headingROF';
 import StandingsROF from "./standingsROF";
-
+import { openDB } from "../../functions/indexedDB";
+import { fetchMain, setState } from "../../actions/actions";
 
 const MainROF = ({ pool, title, startSeason }) => {
+    const dispatch = useDispatch();
     const [stateState, setStateState] = useState({});
     const [stateAllPlayers, setStateAllPlayers] = useState([]);
     const [stateStandings, setStateStandings] = useState()
@@ -17,11 +20,11 @@ const MainROF = ({ pool, title, startSeason }) => {
 
 
             setStateState(home_data.data.state)
-            setStateAllPlayers(home_data.data.allplayers)
 
         }
 
         fetchData()
+        openDB('allplayers', () => dispatch(fetchMain('allplayers')), (value) => dispatch(setState({ allplayers: value }, 'MAIN')));
     }, [])
 
     useEffect(() => {

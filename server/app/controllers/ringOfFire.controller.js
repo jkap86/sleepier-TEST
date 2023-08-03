@@ -9,8 +9,7 @@ exports.home = (req, res, app) => {
     const state = app.get('state')
 
     res.send({
-        state: state,
-        allplayers: allplayers
+        state: state
     })
 }
 
@@ -93,42 +92,46 @@ exports.standings = async (req, res, league_ids, pool_name) => {
         let rostersROF = []
 
         await Promise.all(league_ids.map(async league_id => {
-            const [league, rosters, users, traded_picks_current, drafts] = await Promise.all([
-                await axios.get(`https://api.sleeper.app/v1/league/${league_id}`),
-                await axios.get(`https://api.sleeper.app/v1/league/${league_id}/rosters`),
-                await axios.get(`https://api.sleeper.app/v1/league/${league_id}/users`),
-                await axios.get(`https://api.sleeper.app/v1/league/${league_id}/traded_picks`),
-                await axios.get(`https://api.sleeper.app/v1/league/${league_id}/drafts`)
-            ])
-            let draft_picks = getDraftPicks(traded_picks_current.data, rosters.data, users.data, drafts.data, league.data)
-            rosters.data.map(roster => {
-                rostersROF.push({
-                    ...roster,
-                    rosters: rosters.data.map(r => {
-                        const user = users.data.find(x => x.user_id === r.owner_id)
-                        return {
-                            ...r,
-                            username: user?.display_name || 'Orphan',
-                            avatar: user?.avatar || null,
-                            user_id: r.owner_id,
-                            draft_picks: draft_picks[r.roster_id]
-                        }
-                    }),
-                    scoring_settings: league.data.scoring_settings,
-                    roster_positions: league.data.roster_positions,
-                    draft_picks: draft_picks[roster.roster_id],
-                    league_name: league.data.name,
-                    league_avatar: league.data.avatar,
-                    username: roster.owner_id > 0 ? users.data.find(x => x.user_id === roster.owner_id).display_name : 'orphan',
-                    user_avatar: roster.owner_id > 0 ? users.data.find(x => x.user_id === roster.owner_id).avatar : null,
-                    wins: roster.settings.wins,
-                    losses: roster.settings.losses,
-                    ties: roster.settings.ties,
-                    fpts: parseFloat(roster.settings.fpts + '.' + roster.settings.fpts_decimal),
-                    fpts_against: roster.settings.fpts_against === undefined ? 0 : parseFloat(roster.settings.fpts_against + '.' + roster.settings.fpts_against_decimal),
+            try {
+                const [league, rosters, users, traded_picks_current, drafts] = await Promise.all([
+                    await axios.get(`https://api.sleeper.app/v1/league/${league_id}`),
+                    await axios.get(`https://api.sleeper.app/v1/league/${league_id}/rosters`),
+                    await axios.get(`https://api.sleeper.app/v1/league/${league_id}/users`),
+                    await axios.get(`https://api.sleeper.app/v1/league/${league_id}/traded_picks`),
+                    await axios.get(`https://api.sleeper.app/v1/league/${league_id}/drafts`)
+                ])
+                let draft_picks = getDraftPicks(traded_picks_current.data, rosters.data, users.data, drafts.data, league.data)
+                rosters.data.map(roster => {
+                    rostersROF.push({
+                        ...roster,
+                        rosters: rosters.data.map(r => {
+                            const user = users.data.find(x => x.user_id === r.owner_id)
+                            return {
+                                ...r,
+                                username: user?.display_name || 'Orphan',
+                                avatar: user?.avatar || null,
+                                user_id: r.owner_id,
+                                draft_picks: draft_picks[r.roster_id]
+                            }
+                        }),
+                        scoring_settings: league.data.scoring_settings,
+                        roster_positions: league.data.roster_positions,
+                        draft_picks: draft_picks[roster.roster_id],
+                        league_name: league.data.name,
+                        league_avatar: league.data.avatar,
+                        username: roster.owner_id > 0 ? users.data.find(x => x.user_id === roster.owner_id).display_name : 'orphan',
+                        user_avatar: roster.owner_id > 0 ? users.data.find(x => x.user_id === roster.owner_id).avatar : null,
+                        wins: roster.settings.wins,
+                        losses: roster.settings.losses,
+                        ties: roster.settings.ties,
+                        fpts: parseFloat(roster.settings.fpts + '.' + roster.settings.fpts_decimal),
+                        fpts_against: roster.settings.fpts_against === undefined ? 0 : parseFloat(roster.settings.fpts_against + '.' + roster.settings.fpts_against_decimal),
 
+                    })
                 })
-            })
+            } catch (error) {
+                console.log('ERROR processing league ' + league_id)
+            }
         }))
 
         console.log(`${pool_name} standings update for ${season} complete...`)
