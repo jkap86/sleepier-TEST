@@ -10,8 +10,8 @@ const dynastyValuesReducer = (state = initialState, action) => {
         case 'FETCH_DYNASTY_VALUES_START':
             return { ...state, isLoading: true, error: null };
         case 'FETCH_DYNASTY_VALUES_SUCCESS':
-
-            const values_object = action.payload
+            console.log({ payload: action.payload })
+            const values_object = action.payload.dates ? action.payload.data : action.payload.data
                 .map(date_values_object => {
                     return {
                         date: date_values_object.date,
@@ -22,7 +22,7 @@ const dynastyValuesReducer = (state = initialState, action) => {
 
                 })
 
-
+            console.log({ values_object: values_object })
             return {
                 ...state,
                 isLoading: false,

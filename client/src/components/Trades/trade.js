@@ -8,6 +8,7 @@ const Trade = ({
     const { state: stateState, allplayers } = useSelector(state => state.main)
     const { dynastyValues: stateDynastyRankings } = useSelector(state => state.dynastyValues)
 
+    console.log({ stateDynastyRankings: stateDynastyRankings })
     const eastern_time = new Date(new Date() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0]
 
     return <TableMain

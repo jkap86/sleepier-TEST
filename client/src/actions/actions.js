@@ -207,7 +207,12 @@ export const fetchValues = (trendDateStart, trendDateEnd, dates, player_ids) => 
         }
 
 
-        dispatch({ type: 'FETCH_DYNASTY_VALUES_SUCCESS', payload: dynastyValues.data })
+        dispatch({
+            type: 'FETCH_DYNASTY_VALUES_SUCCESS', payload: {
+                data: dynastyValues.data,
+                dates: dates
+            }
+        })
     } catch (error) {
         dispatch({ type: 'FETCH_DYNASTY_VALUES_FAILURE', payload: error.message })
     }
