@@ -117,7 +117,7 @@ export const getTradeTips = (trades, leagues, leaguemates, season) => {
                         league.rosters.find(r => r.user_id === lm_user_id) && league.userRoster.user_id !== lm_user_id
                         &&
                         league.rosters?.find(r => r.roster_id !== league.userRoster.roster_id && (r.user_id === lm_user_id || r.co_owners?.find(co => co.user_id === lm_user_id)))?.draft_picks?.find(pickLM => {
-                            return parseInt(pick.season) === pickLM.season && pick.round === pickLM.round && (pick.order === pickLM.order)
+                            return parseInt(pick.season) === pickLM.season && pick.round === pickLM.round && (parseInt(pick.season) !== parseInt(season) || pick.order === pickLM.order)
                         })
                         && league.league_id !== trade.leagueLeagueId
                     )
