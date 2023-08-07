@@ -104,7 +104,7 @@ const LoadData = ({ tab, player_ids }) => {
     }, [trades.lmTrades.trades, trades.lmTrades.page])
 
     useEffect(() => {
-        if (user.user_id && leagues.length > 0 && tab === 'lmTrades' && trades.lmTrades.trades.length === 0) {
+        if (user.user_id && leagues.length > 0 && tab === 'lmTrades' && trades.lmTrades.count === '') {
             dispatch(fetchLmTrades(user.user_id, leagues, state.league_season, 0, 125))
 
         }

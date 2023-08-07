@@ -1,5 +1,6 @@
 'use strict';
 const db = require("../models");
+const User = db.users;
 const League = db.leagues;
 const axios = require('../api/axiosInstance');
 const JSONStream = require('JSONStream');
@@ -62,11 +63,39 @@ exports.find = async (req, res, app, user_cache) => {
 
         const updated_leagues = await updateBatchedLeagues([leagues_to_update, leagues_to_add].flat(), 1)
 
+        const user_data = []
+        const user_league_data = []
+
+        updated_leagues
+            .filter(league => league !== null)
+            .forEach(league => {
+                league.users.forEach(user => {
+                    user_data.push({
+                        user_id: user.user_id,
+                        username: user.display_name,
+                        avatar: user.avatar,
+                        type: 'LM',
+                        updatedAt: new Date()
+                    })
+
+                    user_league_data.push({
+                        userUserId: user.user_id,
+                        leagueLeagueId: league.league_id
+                    })
+                })
+
+                delete league.users;
+            })
+
         try {
+            await User.bulkCreate(user_data, { ignoreDuplicates: true });
+
             await League.bulkCreate(updated_leagues.filter(league => league), {
                 updateOnDuplicate: ["name", "avatar", "settings", "scoring_settings", "roster_positions",
                     "rosters", "drafts", `matchups_${1}`, "updatedAt"]
-            })
+            });
+
+            await db.sequelize.model('userLeagues').bulkCreate(user_league_data, { ignoreDuplicates: true });
         } catch (error) {
             console.log(error)
         }

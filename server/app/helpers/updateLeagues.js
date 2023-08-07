@@ -102,7 +102,7 @@ const updatedLeague = async (league_to_update, display_week, sync) => {
         }
 
 
-        const rosters_username = rosters.data
+        const rosters_username = [...rosters.data]
             ?.sort(
                 (a, b) =>
                     (b.settings?.wins ?? 0) - (a.settings?.wins ?? 0)
@@ -160,8 +160,9 @@ const updatedLeague = async (league_to_update, display_week, sync) => {
             ?.filter(user =>
                 rosters.data
                     ?.find(roster =>
-                        roster.owner_id === user.user_id
-                        || roster.co_owners?.find(co => co === user.user_id)
+                        (roster.owner_id === user.user_id
+                            || roster.co_owners?.find(co => co === user.user_id))
+                        && roster.players?.length > 0
                     )
             )
 

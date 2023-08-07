@@ -1,7 +1,7 @@
 const initialState = {
     isLoading: false,
     lmTrades: {
-        count: 0,
+        count: '',
         trades: [],
         itemActive: '',
         page: 1,
