@@ -9,7 +9,8 @@ const initialState = {
     errorUser: null,
     errorLeagues: null,
     syncing: false,
-    errorSyncing: null
+    errorSyncing: null,
+    lmplayershares: []
 };
 
 const userReducer = (state = initialState, action) => {
@@ -52,10 +53,12 @@ const userReducer = (state = initialState, action) => {
 
                 })
 
-            saveToDB(state.user.user_id, 'leagues', {
-                timestamp: new Date().getTime() + 15 * 60 * 1000,
-                data: leagues
-            })
+            if (!action.payload.find(league => league.error)) {
+                saveToDB(state.user.user_id, 'leagues', {
+                    timestamp: new Date().getTime() + 15 * 60 * 1000,
+                    data: leagues
+                })
+            }
             return {
                 ...state,
                 isLoadingLeagues: false,

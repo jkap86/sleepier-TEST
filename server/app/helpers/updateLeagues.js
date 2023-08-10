@@ -87,7 +87,7 @@ const updatedLeague = async (league_to_update, display_week, sync) => {
             rosters.data.find(roster => roster.players?.length > 0)
             && league.data.settings.type === 2
         )
-            && getDraftPicks(traded_picks.data, rosters.data, users.data, drafts.data, league.data)
+            && getDraftPicks(traded_picks.data, rosters.data, [...users.data], drafts.data, league.data)
             || []
 
         const drafts_array = []
@@ -142,7 +142,8 @@ const updatedLeague = async (league_to_update, display_week, sync) => {
             waiver_day_of_week,
             daily_waivers_hour,
             league_average_match,
-            playoff_week_start
+            playoff_week_start,
+            disable_trades
         } = league.data.settings || {}
 
         const settings = {
@@ -153,10 +154,11 @@ const updatedLeague = async (league_to_update, display_week, sync) => {
             daily_waivers_hour,
             league_average_match,
             playoff_week_start,
+            disable_trades,
             status: league.data.status
         }
 
-        const users_w_rosters = users.data
+        const users_w_rosters = [...users.data]
             ?.filter(user =>
                 rosters.data
                     ?.find(roster =>
@@ -165,7 +167,6 @@ const updatedLeague = async (league_to_update, display_week, sync) => {
                         && roster.players?.length > 0
                     )
             )
-
 
 
         return {

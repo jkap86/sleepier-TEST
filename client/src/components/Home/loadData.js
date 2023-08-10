@@ -5,7 +5,7 @@ import { resetState, fetchUser, fetchMain, setState, fetchLeagues } from "../../
 import { openDB } from '../../functions/indexedDB';
 import { fetchFilteredData, fetchLmTrades, fetchPriceCheckTrades, fetchStats, fetchValues, fetchFilteredLmTrades } from "../../actions/actions";
 import { getRecordDict } from "../../functions/getRecordDict";
-
+import axios from 'axios';
 
 const LoadData = ({ tab, player_ids }) => {
     const params = useParams();
@@ -39,6 +39,18 @@ const LoadData = ({ tab, player_ids }) => {
         if (user?.user_id && leagues.length === 0) {
             //  dispatch(fetchLeagues(user.user_id))
             openDB(user.user_id, ['leagues'], () => dispatch(fetchLeagues(user.user_id)), (item, value) => dispatch(setState({ leagues: value }, 'USER')));
+
+            const fetchLmPlayerShares = async (user_id) => {
+                const lmplayershares = await axios.get('/user/lmplayershares', {
+                    params: { user_id: user_id }
+                });
+
+                console.log({ lmplayershares: lmplayershares.data.sort((a, b) => a.username > b.username ? 1 : -1) })
+
+                dispatch(setState({ lmplayershares: lmplayershares.data }, 'USER'));
+
+            }
+            fetchLmPlayerShares(user.user_id)
         }
     }, [user])
 

@@ -1,5 +1,5 @@
 import TableMain from "../Home/tableMain";
-import { useState, useRef, useEffect } from "react";
+import { useMemo, useRef, useEffect } from "react";
 //  import LeagueInfo from "../Leagues/leagueInfo";
 import { useSelector, useDispatch } from 'react-redux';
 import LeagueInfo from "../Leagues/leagueInfo";
@@ -17,10 +17,60 @@ const PlayerLeagues = ({
     player_id
 }) => {
     const dispatch = useDispatch();
+    const { lmplayershares } = useSelector(state => state.user);
     const { modalVisible, tab, itemActive2, page2 } = useSelector(state => state.players)
-    const { allplayers: stateAllPlayers } = useSelector(state => state.main)
+    const { allplayers: stateAllPlayers, type1, type2 } = useSelector(state => state.main)
     const { stats: stateStats } = useSelector(state => state.stats)
     const playerModalRef = useRef(null)
+
+
+    const most_owned = useMemo(() => {
+        let keys;
+
+        switch (`${type1}-${type2}`) {
+            case 'All-All':
+                keys = ['all']
+                break;
+            case 'Redraft-All':
+                keys = ['r_b', 'r_s'];
+
+                break;
+            case 'Dynasty-All':
+                keys = ['d_b', 'd_s'];
+
+                break;
+            case 'All-Bestball':
+                keys = ['r_b', 'd_b'];
+
+                break;
+            case 'All-Standard':
+                keys = ['r_s', 'd_s'];
+
+                break;
+            default:
+                break;
+        }
+
+        console.log(keys)
+        const most_owned = lmplayershares
+            .filter(lm => lm?.user_id && lm?.playershares?.[player_id])
+            .map(lm => {
+                return {
+                    user_id: lm.user_id,
+                    username: lm.username,
+                    avatar: lm.avatar,
+                    count: keys?.reduce((acc, cur) => acc + lm.playershares[player_id]?.[cur]?.[0], 0),
+                    percentage: (
+                        keys?.reduce((acc, cur) => acc + lm.playershares[player_id]?.[cur]?.[0], 0)
+                        / keys?.reduce((acc, cur) => acc + lm.playershares[player_id]?.[cur]?.[1], 0)
+                        * 100
+                    ).toFixed(1)
+
+                }
+            })
+
+        return most_owned;
+    }, [type1, type2, lmplayershares])
 
 
     useEffect(() => {
@@ -65,7 +115,7 @@ const PlayerLeagues = ({
     const leagues_display = tab.secondary === 'Owned' ? leagues_owned :
         tab.secondary === 'Taken' ? leagues_taken :
             tab.secondary === 'Available' ? leagues_available :
-                null
+                []
 
     const player_leagues_body = leagues_display.map(lo => {
         const player_score = getPlayerScore(trend_games, lo.scoring_settings)
@@ -160,6 +210,65 @@ const PlayerLeagues = ({
         }
     })
 
+    const leaguemate_shares_body_count = most_owned
+        ?.sort((a, b) => b.count - a.count)
+        .slice(0, 25)
+        ?.map(lm => {
+
+            return {
+                id: lm.user_id,
+                list: [
+                    {
+                        text: lm.username,
+                        colSpan: 3,
+                        className: 'left',
+                        image: {
+                            src: lm.avatar,
+                            alt: 'avatar',
+                            type: 'user'
+                        }
+                    },
+                    {
+                        text: lm.count,
+                        colSpan: 1
+                    },
+                    {
+                        text: lm.percentage + '%',
+                        colSpan: 1
+                    }
+                ]
+            }
+        })
+
+    const leaguemate_shares_body_percentage = most_owned
+        ?.sort((a, b) => b.percentage - a.percentage)
+        .slice(0, 25)
+        ?.map(lm => {
+
+            return {
+                id: lm.user_id,
+                list: [
+                    {
+                        text: lm.username,
+                        colSpan: 3,
+                        className: 'left',
+                        image: {
+                            src: lm.avatar,
+                            alt: 'avatar',
+                            type: 'user'
+                        }
+                    },
+                    {
+                        text: lm.count,
+                        colSpan: 1
+                    },
+                    {
+                        text: lm.percentage + '%',
+                        colSpan: 1
+                    }
+                ]
+            }
+        })
 
     return <>
 
@@ -182,34 +291,55 @@ const PlayerLeagues = ({
             >
                 Available
             </button>
+            <button
+                className={tab.secondary === 'Leaguemate Shares' ? 'active click' : 'click'}
+                onClick={() => dispatch(setState({ tab: { ...tab, secondary: 'Leaguemate Shares' } }, 'PLAYERS'))}
+            >
+                Leaguemate Shares
+            </button>
         </div>
-        <div className="relative">
-            {
-                !modalVisible.player2 ?
-                    null
-                    :
-                    <div className="modal" ref={playerModalRef} >
-                        <PlayerModal
-                            setPlayerModalVisible={(value) => dispatch(setState({ modalVisible: { ...modalVisible, player2: value } }, 'PLAYERS'))}
-                            player={{
-                                ...stateAllPlayers[player_id],
-                                ...modalVisible.player2
-                            }}
-                            getPlayerScore={getPlayerScore}
-                            league={modalVisible.player2?.league}
-                        />
-                    </div>
-            }
-            <TableMain
-                type={'secondary'}
-                headers={player_leagues_headers}
-                body={player_leagues_body}
-                itemActive={itemActive2}
-                setItemActive={(item) => dispatch(setState({ itemActive2: item }, 'PLAYERS'))}
-                page={page2}
-                setPage={(page) => dispatch(setState({ page2: page }, 'PLAYERS'))}
-            />
-        </div>
+        {
+            tab.secondary === 'Leaguemate Shares'
+                ? <>
+                    <TableMain
+                        type={'secondary subs'}
+                        headers={[]}
+                        body={leaguemate_shares_body_count}
+                    />
+                    <TableMain
+                        type={'secondary lineup'}
+                        headers={[]}
+                        body={leaguemate_shares_body_percentage}
+                    />
+                </>
+                : <div className="relative">
+                    {
+                        !modalVisible.player2 ?
+                            null
+                            :
+                            <div className="modal" ref={playerModalRef} >
+                                <PlayerModal
+                                    setPlayerModalVisible={(value) => dispatch(setState({ modalVisible: { ...modalVisible, player2: value } }, 'PLAYERS'))}
+                                    player={{
+                                        ...stateAllPlayers[player_id],
+                                        ...modalVisible.player2
+                                    }}
+                                    getPlayerScore={getPlayerScore}
+                                    league={modalVisible.player2?.league}
+                                />
+                            </div>
+                    }
+                    <TableMain
+                        type={'secondary'}
+                        headers={player_leagues_headers}
+                        body={player_leagues_body}
+                        itemActive={itemActive2}
+                        setItemActive={(item) => dispatch(setState({ itemActive2: item }, 'PLAYERS'))}
+                        page={page2}
+                        setPage={(page) => dispatch(setState({ page2: page }, 'PLAYERS'))}
+                    />
+                </div>
+        }
     </>
 }
 

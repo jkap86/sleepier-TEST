@@ -8,10 +8,11 @@ import { filterLeagues } from '../../functions/filterLeagues';
 
 const LeaguemateLeagues = ({ leaguemate }) => {
     const dispatch = useDispatch();
-    const { user: state_user } = useSelector(state => state.user)
+    const { user: state_user, lmplayershares } = useSelector(state => state.user)
     const { allplayers: stateAllPlayers, type1, type2 } = useSelector(state => state.main)
     const leaguemates = useSelector(state => state.leaguemates);
     const initialLoadRef = useRef(null);
+
 
 
     useEffect(() => {
@@ -20,7 +21,7 @@ const LeaguemateLeagues = ({ leaguemate }) => {
         } else {
             dispatch(setState({ page_players: 1 }, 'LEAGUEMATES'))
         }
-    }, [leaguemates.searched_players, dispatch])
+    }, [leaguemates.searched_players, dispatch]);
 
 
     const playersCount = useMemo(() => {
@@ -97,6 +98,82 @@ const LeaguemateLeagues = ({ leaguemate }) => {
 
     }, [leaguemate, type1, type2])
 
+    /*
+       const userPlayerShares = lmplayershares.find(l => l.user_id === state_user.user_id)?.playershares || {}
+   
+   
+   
+       const lmPlayerShares_body = Object.keys(lmplayershares.find(l => l.user_id === leaguemate.user_id)?.playershares || {})
+           .filter(player_id => stateAllPlayers[player_id]?.full_name)
+           .map(player_id => {
+               let keys;
+   
+               switch (`${type1}-${type2}`) {
+                   case 'All-All':
+                       keys = ['all']
+                       break;
+                   case 'Redraft-All':
+                       keys = ['r_b', 'r_s'];
+   
+                       break;
+                   case 'Dynasty-All':
+                       keys = ['d_b', 'd_s'];
+   
+                       break;
+                   case 'All-Bestball':
+                       keys = ['r_b', 'd_b'];
+   
+                       break;
+                   case 'All-Standard':
+                       keys = ['r_s', 'd_s'];
+   
+                       break;
+                   default:
+                       break;
+               }
+   
+               return {
+                   id: player_id,
+                   list: [
+                       {
+                           text: stateAllPlayers[player_id]?.full_name || '-',
+                           colSpan: 3,
+                           className: 'left',
+                           image: {
+                               src: player_id,
+                               alt: 'player',
+                               type: 'player'
+                           }
+                       },
+                       {
+                           text: keys?.reduce((acc, cur) => acc + (lmplayershares.find(l => l.user_id === leaguemate.user_id).playershares[player_id][cur][0] || 0), 0) || '0',
+                           colSpan: 1
+                       },
+                       {
+                           text: (
+                               keys?.reduce((acc, cur) => acc + lmplayershares.find(l => l.user_id === leaguemate.user_id).playershares[player_id][cur][0], 0)
+                               / keys?.reduce((acc, cur) => acc + lmplayershares.find(l => l.user_id === leaguemate.user_id).playershares[player_id][cur][0], 0)
+                               * 100
+                           ).toFixed(1),
+                           colSpan: 1
+                       },
+                       {
+                           text: keys?.reduce((acc, cur) => acc + (userPlayerShares[player_id]?.[cur][0] || 0), 0) || '0',
+                           colSpan: 1
+                       },
+                       {
+                           text: (
+                               keys?.reduce((acc, cur) => acc + userPlayerShares[player_id]?.[cur][0], 0)
+                               / keys?.reduce((acc, cur) => acc + userPlayerShares[player_id]?.[cur][1], 0)
+                               * 100
+                           ).toFixed(1),
+                           colSpan: 1
+                       }
+                   ]
+               }
+           });
+   
+     */
 
     const leaguemateLeagues_headers = [
         [

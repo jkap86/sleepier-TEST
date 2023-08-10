@@ -5,17 +5,17 @@ const axiosInstance = axios.create({
     headers: {
         'content-type': 'application/json'
     },
-    httpsAgent: new https.Agent({ rejectUnauthorized: false, keepAlive: true }),
+    httpsAgent: new https.Agent({ keepAlive: true }),
     timeout: 3000
 });
 
 const axiosRetry = require('axios-retry');
 
 axiosRetry(axiosInstance, {
-    retries: 5,
+    retries: 3,
     retryCondition: () => true,
     retryDelay: (retryNumber) => {
-        return 2000 + (retryNumber * 1000)
+        return 1000 + (retryNumber * 1000)
     }
 })
 

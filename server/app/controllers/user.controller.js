@@ -1,6 +1,7 @@
 'use strict'
 const db = require("../models");
 const User = db.users;
+const League = db.leagues;
 const axios = require('../api/axiosInstance');
 
 exports.create = async (req, res, app) => {
@@ -38,6 +39,52 @@ exports.create = async (req, res, app) => {
         })
     } else {
         res.send({ error: 'User not found' })
+    }
+}
+
+exports.lmplayershares = async (req, res) => {
+    try {
+        const lmplayershares = await User.findAll({
+            attributes: ['user_id'],
+            include: [
+                {
+                    model: League,
+                    attributes: [],
+                    include: {
+                        model: User,
+                        through: { attributes: [] },
+                        attributes: [],
+                        where: {
+                            user_id: req.query.user_id
+                        }
+                    },
+                    required: true
+                }
+            ]
+        })
+
+        const lmleaguescount = await User.findAll({
+            attributes: [
+                'user_id',
+                'username',
+                'avatar',
+                'playershares'
+            ],
+            where: {
+                user_id: lmplayershares.map(lm => lm.dataValues.user_id)
+            },
+            include: {
+                model: League,
+                attributes: [],
+                through: { attributes: [] },
+                required: true
+            },
+            group: ['user.user_id']
+        })
+
+        res.send(lmleaguescount)
+    } catch (error) {
+        console.log(error)
     }
 }
 

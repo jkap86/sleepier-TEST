@@ -15,18 +15,7 @@ exports.find = async (req, res, app, user_cache) => {
     let leagues;
     let retries = 0;
 
-    try {
-        leagues = await axios.get(`https://api.sleeper.app/v1/user/${user_id}/leagues/nfl/${2023}`)
-    } catch (error) {
-        if (retries <= 3) {
-            retries += 1
-            setTimeout(async () => {
-                leagues = await axios.get(`https://api.sleeper.app/v1/user/${user_id}/leagues/nfl/${2023}`)
-            }, retries * 1000)
-        } else {
-            leagues = { data: [] }
-        }
-    }
+
 
     const splitLeagues = async (leagues) => {
         const cutoff = new Date(new Date() - (24 * 60 * 60 * 1000));
@@ -70,13 +59,15 @@ exports.find = async (req, res, app, user_cache) => {
             .filter(league => league !== null)
             .forEach(league => {
                 league.users.forEach(user => {
-                    user_data.push({
-                        user_id: user.user_id,
-                        username: user.display_name,
-                        avatar: user.avatar,
-                        type: 'LM',
-                        updatedAt: new Date()
-                    })
+                    if (!user_data.find(u => u.user_id === user.user_id)) {
+                        user_data.push({
+                            user_id: user.user_id,
+                            username: user.display_name,
+                            avatar: user.avatar,
+                            type: 'LM',
+                            updatedAt: new Date(new Date() - 24 * 60 * 60 * 1000)
+                        })
+                    }
 
                     user_league_data.push({
                         userUserId: user.user_id,
@@ -88,7 +79,7 @@ exports.find = async (req, res, app, user_cache) => {
             })
 
         try {
-            await User.bulkCreate(user_data, { ignoreDuplicates: true });
+            await User.bulkCreate(user_data, { updateOnDuplicate: ["type"] });
 
             await League.bulkCreate(updated_leagues.filter(league => league), {
                 updateOnDuplicate: ["name", "avatar", "settings", "scoring_settings", "roster_positions",
@@ -108,6 +99,9 @@ exports.find = async (req, res, app, user_cache) => {
 
         const data = leagues_to_send;
 
+        if (updated_leagues.find(league => !league)) {
+            data.push({ error: 'Error updating leagues...' })
+        }
 
         try {
             // Stream the JSON data in chunks to the client
@@ -128,6 +122,12 @@ exports.find = async (req, res, app, user_cache) => {
     const chunkSize = 25;
 
     try {
+        try {
+            leagues = await axios.get(`https://api.sleeper.app/v1/user/${user_id}/leagues/nfl/${2023}`)
+        } catch (error) {
+            console.log(error.message)
+        }
+
         for (let i = 0; i < leagues.data.length; i += chunkSize) {
             const chunk = leagues.data.slice(i, i + chunkSize);
             await processLeaguesStream(chunk, stream)
@@ -142,7 +142,7 @@ exports.find = async (req, res, app, user_cache) => {
         stream.end();
 
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
     }
 }
 
