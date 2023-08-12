@@ -1,14 +1,21 @@
 import TableMain from "../Home/tableMain"
-import { useSelector } from 'react-redux';
-import { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { setState, syncLeague } from "../../actions/actions";
 
 const TeamMatchups = ({
     league_id,
-    roster_id
+    roster_id,
+    playoff_week_start
 }) => {
-    const [itemActive, setItemActive] = useState('');
+    const dispatch = useDispatch();
+    const { user } = useSelector(state => state.user);
     const { projectionDict } = useSelector(state => state.main);
-    const { rankings, includeTaxi, includeLocked, week, recordType } = useSelector(state => state.lineups)
+    const { includeTaxi, includeLocked, syncing, recordType } = useSelector(state => state.lineups)
+
+    const handleSync = (league_id, week) => {
+        dispatch(setState({ syncing: { league_id: league_id, week: week } }, 'LINEUPS'))
+        dispatch(syncLeague(league_id, user.user_id, user.username, week))
+    }
 
     const hash = `${includeTaxi}-${includeLocked}`;
 
@@ -101,7 +108,14 @@ const TeamMatchups = ({
                                     (m?.[recordType]?.fpts > m?.[recordType]?.fpts_against ? 'W'
                                         : m?.[recordType]?.fpts < m?.[recordType]?.fpts_against ? 'L'
                                             : 'T')
-                                    : '-'
+                                    : parseInt(week) < playoff_week_start
+                                        ? <button
+                                            className={`sync ${syncing?.week === week ? 'rotate' : 'click'}`}
+                                            onClick={syncing ? null : () => handleSync(league_id, week)}
+                                        >
+                                            <i className={`fa-solid fa-arrows-rotate ${syncing ? 'rotate' : ''}`}></i>
+                                        </button>
+                                        : '-'
                             }
                             {
                                 m?.[recordType]?.median_wins && <i className="fa-solid fa-trophy"></i>
@@ -124,8 +138,6 @@ const TeamMatchups = ({
             type={'tertiary'}
             headers={headers}
             body={body}
-            itemActive={itemActive}
-            setItemActive={setItemActive}
         />
     </>
 }

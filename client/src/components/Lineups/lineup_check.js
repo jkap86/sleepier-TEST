@@ -312,6 +312,7 @@ const LineupCheck = ({
                         getAttribute={getAttribute}
                         league_id={league.league_id}
                         rosters={league.rosters}
+                        playoff_week_start={league.settings.playoff_week_start}
                     />
                 )
             }

@@ -83,13 +83,9 @@ const userReducer = (state = initialState, action) => {
                 return l
             })
 
-            saveToDB(state.user.username.toLowerCase(), {
+            saveToDB(state.user.user_id, 'leagues', {
                 timestamp: new Date().getTime() + 15 * 60 * 1000,
-                data: {
-                    user: state.user,
-                    leagues: updated_leagues,
-                    state: action.payload.state
-                }
+                data: updated_leagues
             })
 
 

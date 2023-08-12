@@ -6,7 +6,8 @@ import { useState } from "react";
 const Standings = ({
     league_id,
     getAttribute,
-    rosters
+    rosters,
+    playoff_week_start
 }) => {
     const [itemActive, setItemActive] = useState('');
     const { projectionDict } = useSelector(state => state.main);
@@ -84,6 +85,7 @@ const Standings = ({
                     <TeamMatchups
                         league_id={league_id}
                         roster_id={roster_id}
+                        playoff_week_start={playoff_week_start}
                     />
                 )
             }
