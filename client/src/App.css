@@ -74,6 +74,10 @@ h1.error {
   align-items: center;
 }
 
+em.small {
+  font-size: 75%;
+}
+
 option {
   background-color: #9ca7b4;
   color: black;

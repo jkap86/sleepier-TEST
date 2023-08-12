@@ -98,82 +98,149 @@ const LeaguemateLeagues = ({ leaguemate }) => {
 
     }, [leaguemate, type1, type2])
 
-    /*
-       const userPlayerShares = lmplayershares.find(l => l.user_id === state_user.user_id)?.playershares || {}
-   
-   
-   
-       const lmPlayerShares_body = Object.keys(lmplayershares.find(l => l.user_id === leaguemate.user_id)?.playershares || {})
-           .filter(player_id => stateAllPlayers[player_id]?.full_name)
-           .map(player_id => {
-               let keys;
-   
-               switch (`${type1}-${type2}`) {
-                   case 'All-All':
-                       keys = ['all']
-                       break;
-                   case 'Redraft-All':
-                       keys = ['r_b', 'r_s'];
-   
-                       break;
-                   case 'Dynasty-All':
-                       keys = ['d_b', 'd_s'];
-   
-                       break;
-                   case 'All-Bestball':
-                       keys = ['r_b', 'd_b'];
-   
-                       break;
-                   case 'All-Standard':
-                       keys = ['r_s', 'd_s'];
-   
-                       break;
-                   default:
-                       break;
-               }
-   
-               return {
-                   id: player_id,
-                   list: [
-                       {
-                           text: stateAllPlayers[player_id]?.full_name || '-',
-                           colSpan: 3,
-                           className: 'left',
-                           image: {
-                               src: player_id,
-                               alt: 'player',
-                               type: 'player'
-                           }
-                       },
-                       {
-                           text: keys?.reduce((acc, cur) => acc + (lmplayershares.find(l => l.user_id === leaguemate.user_id).playershares[player_id][cur][0] || 0), 0) || '0',
-                           colSpan: 1
-                       },
-                       {
-                           text: (
-                               keys?.reduce((acc, cur) => acc + lmplayershares.find(l => l.user_id === leaguemate.user_id).playershares[player_id][cur][0], 0)
-                               / keys?.reduce((acc, cur) => acc + lmplayershares.find(l => l.user_id === leaguemate.user_id).playershares[player_id][cur][0], 0)
-                               * 100
-                           ).toFixed(1),
-                           colSpan: 1
-                       },
-                       {
-                           text: keys?.reduce((acc, cur) => acc + (userPlayerShares[player_id]?.[cur][0] || 0), 0) || '0',
-                           colSpan: 1
-                       },
-                       {
-                           text: (
-                               keys?.reduce((acc, cur) => acc + userPlayerShares[player_id]?.[cur][0], 0)
-                               / keys?.reduce((acc, cur) => acc + userPlayerShares[player_id]?.[cur][1], 0)
-                               * 100
-                           ).toFixed(1),
-                           colSpan: 1
-                       }
-                   ]
-               }
-           });
-   
-     */
+    let keys;
+
+    switch (`${type1}-${type2}`) {
+        case 'All-All':
+            keys = ['all']
+            break;
+        case 'Redraft-All':
+            keys = ['r_b', 'r_s'];
+
+            break;
+        case 'Dynasty-All':
+            keys = ['d_b', 'd_s'];
+
+            break;
+        case 'All-Bestball':
+            keys = ['r_b', 'd_b'];
+
+            break;
+        case 'All-Standard':
+            keys = ['r_s', 'd_s'];
+
+            break;
+        default:
+            break;
+    };
+
+    const userPlayerShares = lmplayershares.find(l => l.user_id === state_user.user_id)?.playershares || {}
+
+    const lmPlayerShares = lmplayershares.find(l => l.user_id === leaguemate.user_id)?.playershares || {}
+
+    const lmplayershares_header = [
+        [
+            {
+                text: 'Player',
+                colSpan: 4,
+                rowSpan: 2,
+                className: 'half'
+            },
+            {
+                text: leaguemate.username,
+                colSpan: 3,
+                onClick: () => dispatch(setState({ sortBy: 'Leaguemate' }, 'LEAGUEMATES')),
+                className: 'half'
+            },
+            {
+                text: state_user.username,
+                colSpan: 3,
+                onClick: () => dispatch(setState({ sortBy: 'User' }, 'LEAGUEMATES')),
+                className: 'half'
+            }
+        ],
+        [
+            {
+                text: 'Count',
+                colSpan: 1,
+                className: 'small half',
+                onClick: () => dispatch(setState({ sortBy: 'Leaguemate' }, 'LEAGUEMATES')),
+            },
+            {
+                text: '%',
+                colSpan: 2,
+                className: 'small half',
+                onClick: () => dispatch(setState({ sortBy: 'Leaguemate' }, 'LEAGUEMATES')),
+            },
+            {
+                text: 'Count',
+                colSpan: 1,
+                className: 'small half',
+                onClick: () => dispatch(setState({ sortBy: 'User' }, 'LEAGUEMATES')),
+            },
+            {
+                text: '%',
+                colSpan: 2,
+                className: 'small half',
+                onClick: () => dispatch(setState({ sortBy: 'User' }, 'LEAGUEMATES')),
+            }
+        ]
+    ];
+
+    const lmPlayerShares_body = Object.keys(stateAllPlayers)
+        .filter(player_id => stateAllPlayers[player_id]?.full_name && (!leaguemates.searched_players.id || player_id === leaguemates.searched_players.id))
+        .sort((a, b) => leaguemates.sortBy === 'Leaguemate'
+            ? keys?.reduce((acc, cur) => acc + (lmPlayerShares[b]?.[cur][0] || 0), 0) - keys?.reduce((acc, cur) => acc + (lmPlayerShares[a]?.[cur][0] || 0), 0)
+            : keys?.reduce((acc, cur) => acc + (userPlayerShares[b]?.[cur][0] || 0), 0) - keys?.reduce((acc, cur) => acc + (userPlayerShares[a]?.[cur][0] || 0), 0)
+        )
+        .map(player_id => {
+
+            return {
+                id: player_id,
+                search: {
+                    text: stateAllPlayers[player_id]?.full_name,
+                    image: {
+                        src: player_id,
+                        alt: 'player headshot',
+                        type: 'player'
+                    }
+                },
+                list: [
+                    {
+                        text: stateAllPlayers[player_id]?.full_name || '-',
+                        colSpan: 4,
+                        className: 'left',
+                        image: {
+                            src: player_id,
+                            alt: 'player',
+                            type: 'player'
+                        }
+                    },
+                    {
+                        text: keys?.reduce((acc, cur) => acc + (lmPlayerShares[player_id]?.[cur][0] || 0), 0) || '0',
+                        colSpan: 1
+                    },
+                    {
+                        text: keys?.reduce((acc, cur) => acc + (lmPlayerShares[player_id]?.[cur][1] || 0), 0) > 0
+                            ? (
+                                keys?.reduce((acc, cur) => acc + (lmPlayerShares[player_id]?.[cur][0] || 0), 0)
+                                / keys?.reduce((acc, cur) => acc + (lmPlayerShares[player_id]?.[cur][1] || 0), 0)
+                                * 100
+                            ).toFixed(1)
+                            : '-',
+                        colSpan: 2
+                    },
+                    {
+                        text: keys?.reduce((acc, cur) => acc + (userPlayerShares[player_id]?.[cur][0] || 0), 0) || '0',
+                        colSpan: 1
+                    },
+                    {
+                        text: keys?.reduce((acc, cur) => acc + (userPlayerShares[player_id]?.[cur][1] || 0), 0) > 0
+                            ? (
+                                keys?.reduce((acc, cur) => acc + (userPlayerShares[player_id]?.[cur][0] || 0), 0)
+                                / keys?.reduce((acc, cur) => acc + (userPlayerShares[player_id]?.[cur][1] || 0), 0)
+                                * 100
+                            ).toFixed(1)
+                            : '-',
+                        colSpan: 2
+                    }
+                ]
+            }
+        });
+
+    console.log(Object.keys(lmplayershares))
+
+
 
     const leaguemateLeagues_headers = [
         [
@@ -379,6 +446,19 @@ const LeaguemateLeagues = ({ leaguemate }) => {
             }
         })
 
+    const headers = leaguemates.secondaryContent === 'Leagues'
+        ? leaguemateLeagues_headers
+        : leaguemates.secondaryContent === 'Players-common'
+            ? leaguematePlayers_headers
+            : lmplayershares_header
+
+
+    const body = leaguemates.secondaryContent === 'Leagues'
+        ? leaguemateLeagues_body
+        : leaguemates.secondaryContent === 'Players-common'
+            ? leaguematePlayers_body
+            : lmPlayerShares_body
+
 
     return <>
         <div className="secondary nav">
@@ -390,23 +470,29 @@ const LeaguemateLeagues = ({ leaguemate }) => {
                     Leagues
                 </button>
                 <button
-                    className={leaguemates.secondaryContent === 'Players' ? 'active click' : 'click'}
-                    onClick={() => dispatch(setState({ secondaryContent: 'Players' }, 'LEAGUEMATES'))}
+                    className={leaguemates.secondaryContent === 'Players-common' ? 'active click' : 'click'}
+                    onClick={() => dispatch(setState({ secondaryContent: 'Players-common' }, 'LEAGUEMATES'))}
                 >
-                    Players
+                    Players <em className="small">(common leagues)</em>
+                </button>
+                <button
+                    className={leaguemates.secondaryContent === 'Players-all' ? 'active click' : 'click'}
+                    onClick={() => dispatch(setState({ secondaryContent: 'Players-all' }, 'LEAGUEMATES'))}
+                >
+                    Players <em className="small">(all leagues)</em>
                 </button>
             </div>
         </div>
         <TableMain
             id={'Players'}
             type={'secondary'}
-            headers={leaguemates.secondaryContent === 'Leagues' ? leaguemateLeagues_headers : leaguematePlayers_headers}
-            body={leaguemates.secondaryContent === 'Leagues' ? leaguemateLeagues_body : leaguematePlayers_body}
+            headers={headers}
+            body={body}
             page={leaguemates.secondaryContent === 'Leagues' ? leaguemates.page_leagues : leaguemates.page_players}
             setPage={(page) => leaguemates.secondaryContent === 'Leagues' ? dispatch(setState({ page_leagues: page }, 'LEAGUEMATES')) : dispatch(setState({ page_players: page }, 'LEAGUEMATES'))}
-            itemActive={leaguemates.secondaryContent === 'Leagues' ? leaguemates.itemActive_leagues : leaguemates.itemActive_players}
+            itemActive={leaguemates.secondaryContent === 'Leagues' ? leaguemates.itemActive_leagues : leaguemates.secondaryContent === 'Players-common' ? leaguemates.itemActive_players : null}
             setItemActive={(itemActive) => leaguemates.secondaryContent === 'Leagues' ? dispatch(setState({ itemActive_leagues: itemActive }, 'LEAGUEMATES')) : dispatch(setState({ itemActive_players: itemActive }, 'LEAGUEMATES'))}
-            search={leaguemates.secondaryContent === 'Players' ? true : false}
+            search={leaguemates.secondaryContent.includes('Players') ? true : false}
             searched={leaguemates.searched_players}
             setSearched={(searched) => dispatch(setState({ searched_players: searched }, 'LEAGUEMATES'))}
         />
