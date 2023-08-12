@@ -19,7 +19,8 @@ const LeaguemateLeagues = ({ leaguemate }) => {
         if (!initialLoadRef.current) {
             initialLoadRef.current = true
         } else {
-            dispatch(setState({ page_players: 1 }, 'LEAGUEMATES'))
+            dispatch(setState({ page_players_c: 1 }, 'LEAGUEMATES'))
+            dispatch(setState({ page_players_a: 1 }, 'LEAGUEMATES'))
         }
     }, [leaguemates.searched_players, dispatch]);
 
@@ -488,8 +489,8 @@ const LeaguemateLeagues = ({ leaguemate }) => {
             type={'secondary'}
             headers={headers}
             body={body}
-            page={leaguemates.secondaryContent === 'Leagues' ? leaguemates.page_leagues : leaguemates.page_players}
-            setPage={(page) => leaguemates.secondaryContent === 'Leagues' ? dispatch(setState({ page_leagues: page }, 'LEAGUEMATES')) : dispatch(setState({ page_players: page }, 'LEAGUEMATES'))}
+            page={leaguemates.secondaryContent === 'Leagues' ? leaguemates.page_leagues : leaguemates.secondaryContent === 'Players-common' ? leaguemates.page_players_c : leaguemates.page_players_a}
+            setPage={(page) => leaguemates.secondaryContent === 'Leagues' ? dispatch(setState({ page_leagues: page }, 'LEAGUEMATES')) : leaguemates.secondaryContent === 'Players-common' ? dispatch(setState({ page_players_c: page }, 'LEAGUEMATES')) : dispatch(setState({ page_players_a: page }, 'LEAGUEMATES'))}
             itemActive={leaguemates.secondaryContent === 'Leagues' ? leaguemates.itemActive_leagues : leaguemates.secondaryContent === 'Players-common' ? leaguemates.itemActive_players : null}
             setItemActive={(itemActive) => leaguemates.secondaryContent === 'Leagues' ? dispatch(setState({ itemActive_leagues: itemActive }, 'LEAGUEMATES')) : dispatch(setState({ itemActive_players: itemActive }, 'LEAGUEMATES'))}
             search={leaguemates.secondaryContent.includes('Players') ? true : false}

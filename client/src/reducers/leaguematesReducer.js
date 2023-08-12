@@ -6,7 +6,8 @@ const initialState = {
     itemActive_leagues: '',
     page_leagues: 1,
     itemActive_players: '',
-    page_players: 1,
+    page_players_c: 1,
+    page_players_a: 1,
     searched_players: '',
     sortBy: 'Leaguemate'
 
