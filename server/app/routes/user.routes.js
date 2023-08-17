@@ -9,7 +9,7 @@ module.exports = (app, user_cache) => {
         max: 2
     })
 
-    router.get("/create", userLimiter, (req, res, next) => {
+    router.get("/create", (req, res, next) => {
         users.create(req, res, app, user_cache)
     })
 

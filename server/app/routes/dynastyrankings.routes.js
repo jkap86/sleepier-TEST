@@ -12,11 +12,11 @@ module.exports = app => {
 
     var router = require("express").Router();
 
-    router.get("/stats", dynastyrankingsLimiter, dynastyrankings.stats)
+    router.get("/stats", dynastyrankings.stats)
 
-    router.get("/find", dynastyrankingsLimiter, dynastyrankings.find)
+    router.get("/find", dynastyrankings.find)
 
-    router.get("/findrange", dynastyrankingsLimiter, dynastyrankings.findrange)
+    router.get("/findrange", dynastyrankings.findrange)
 
     app.use('/dynastyrankings', router);
 }

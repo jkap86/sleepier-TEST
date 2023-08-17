@@ -12,9 +12,9 @@ module.exports = app => {
 
     var router = require("express").Router();
 
-    router.post('/leaguemate', tradeLimiter, logMemUsage, trades.leaguemate)
+    router.post('/leaguemate', logMemUsage, trades.leaguemate)
 
-    router.post('/pricecheck', tradeLimiter, logMemUsage, trades.pricecheck)
+    router.post('/pricecheck', logMemUsage, trades.pricecheck)
 
     app.use('/trade', router);
 }
