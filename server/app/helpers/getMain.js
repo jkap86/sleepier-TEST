@@ -47,7 +47,7 @@ const getState = async (app) => {
 
     app.set('state', {
         ...state.data,
-        display_week: Math.max(state.data.display_week, 1)
+        display_week: state.data.season_type === "pre" ? 1 : state.data.season_type === "reg" ? Math.max(state.data.display_week, 1) : 19
     }, 0)
 }
 

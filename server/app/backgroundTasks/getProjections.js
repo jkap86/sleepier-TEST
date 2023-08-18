@@ -83,7 +83,7 @@ module.exports = async (app) => {
             const state = app.get('state')
             if (month > 5) {
                 try {
-                    await getProjections(state.league_season, state.season_type === "pre" ? 1 : state.season_type === "reg" ? state.display_week : 19)
+                    await getProjections(state.league_season, state.display_week)
                 } catch (error) {
                     console.log(error)
                 }
