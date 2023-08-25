@@ -75,7 +75,9 @@ const Homepage = () => {
 
         </div>
 
-
+        <a target='_blank' className='link' href={`https://sleepiersplits-73b0aab383b9.herokuapp.com/`}>
+            Sleepier Splits BETA
+        </a>
 
         <div className='home_wrapper'>
             <img
