@@ -33,16 +33,7 @@ div#homepage {
 
     }
 
-    a.link {
-        position: absolute;
-        text-decoration: none;
-        font-size: 3rem;
-        right: 0;
-        top: 0;
-        margin: 2rem;
-        color: var(--color2);
-        filter: brightness(2);
-    }
+
 
     div.picktracker {
         width: fit-content;
@@ -264,6 +255,17 @@ div#homepage {
             }
         }
     }
+}
+
+a.link {
+    position: absolute;
+    text-decoration: none;
+    font-size: 3rem;
+    right: 0;
+    top: 0;
+    margin: 2rem;
+    color: var(--color2);
+    filter: brightness(2);
 }
 
 // loading icon
