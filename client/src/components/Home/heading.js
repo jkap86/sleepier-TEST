@@ -23,7 +23,7 @@ const Heading = ({ tab }) => {
         <Link to="/" className="home">
             Home
         </Link>
-        <a target='_blank' className='link' href={`https://sleepiersplits-73b0aab383b9.herokuapp.com/`}>
+        <a target='_blank' className='link' href={`https://sleepiersplits-ifyhc.ondigitalocean.app/`}>
             Sleepier Splits BETA
         </a>
         <div className="heading">
