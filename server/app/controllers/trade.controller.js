@@ -101,7 +101,7 @@ exports.leaguemate = async (req, res) => {
             count: lmTrades?.count?.length
         }
 
-        cache_trades.set(`${req.body.user_id}_${req.body.manager}_${req.body.player}_${req.body.offset}_${req.body.limit}`, trades_to_send, 1800)
+        cache_trades.set(`${req.body.user_id}_${req.body.manager}_${req.body.player}_${req.body.offset}_${req.body.limit}`, trades_to_send, 300)
 
         res.send(trades_to_send)
     }

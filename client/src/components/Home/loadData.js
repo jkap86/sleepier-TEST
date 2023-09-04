@@ -104,16 +104,31 @@ const LoadData = ({ tab, player_ids }) => {
 
 
     useEffect(() => {
-        let page = trades.lmTrades.page;
+        if (user.user_id && leagues.length > 0 && tab === 'lmTrades' && trades.lmTrades.count > 0) {
+            let page = trades.lmTrades.page;
 
-        const dates = trades.lmTrades.trades.slice((page - 1) * 25, ((page - 1) * 25) + 25).map(trade => new Date(parseInt(trade.status_updated) - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0])
+            const dates = trades.lmTrades.trades.slice((page - 1) * 25, ((page - 1) * 25) + 25).map(trade => new Date(parseInt(trade.status_updated) - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0])
 
-        if (tab === 'lmTrades' && trades) {
+            if (dates) {
 
-            dispatch(fetchValues(null, null, [...dates, new Date(new Date() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0]]))
+                dispatch(fetchValues(null, null, [...dates, new Date(new Date() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0]], null))
+            }
+        } else if (user.user_id && leagues.length > 0 && tab === 'pcTrades') {
+            let page = trades.pricecheckTrades.page;
+            const pcTrades = trades.pricecheckTrades.searches
+                .find(
+                    pc => pc.pricecheck_player === trades.pricecheckTrades.pricecheck_player.id
+                        && (!trades.pricecheckTrades.pricecheck_player2?.id
+                            || pc.pricecheck_player2 === trades.pricecheckTrades.pricecheck_player2.id)
+                )
+            const dates = pcTrades?.trades?.slice((page - 1) * 25, ((page - 1) * 25) + 25).map(trade => new Date(parseInt(trade.status_updated) - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0])
+
+            if (dates) {
+
+                dispatch(fetchValues(null, null, [...dates, new Date(new Date() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0]], null))
+            }
         }
-
-    }, [trades.lmTrades.trades, trades.lmTrades.page])
+    }, [tab, trades.lmTrades.trades, trades.lmTrades.page, trades.pricecheckTrades.searches, trades.pricecheckTrades.page])
 
     useEffect(() => {
         if (user.user_id && leagues.length > 0 && tab === 'lmTrades' && trades.lmTrades.count === '') {
