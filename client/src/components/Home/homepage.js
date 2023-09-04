@@ -75,7 +75,7 @@ const Homepage = () => {
 
         </div>
 
-        <a target='_blank' className='link' href={`http://54.204.243.142:5000/`}>
+        <a target='_blank' className='link' href={`http://18.206.180.1:5000/`}>
             Sleepier Splits BETA
         </a>
 
