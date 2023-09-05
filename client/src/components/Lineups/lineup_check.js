@@ -100,12 +100,13 @@ const LineupCheck = ({
                             : 'green'
                 }
             case 'Open Roster':
+                const user_active_players = league.userRoster.players.filter(p => !league.userRoster.taxi?.includes(p) && !league.userRoster.reserve?.includes(p))
                 return {
-                    text: league.roster_positions.length !== league.userRoster.players?.length
-                        ? ((league.userRoster.players?.length > league.roster_positions.length ? '+' : '') + (league.userRoster.players?.length - league.roster_positions.length))
+                    text: league.roster_positions.length !== user_active_players?.length
+                        ? league.roster_positions.length - user_active_players?.length
                         : '√',
                     colSpan: 2,
-                    className: league.roster_positions.length !== league.userRoster.players?.length
+                    className: league.roster_positions.length !== user_active_players?.length
                         ? 'red'
                         : 'green',
                 }
