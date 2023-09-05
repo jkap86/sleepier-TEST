@@ -115,6 +115,7 @@ const LineupCheck = ({
                 const used_ir = league.userRoster?.reserve?.length || 0
                 const open_ir = total_ir - used_ir;
                 const eligible_ir = league.userRoster.players?.filter(player_id => !league.userRoster.reserve?.includes(player_id)
+                    && !league.userRoster.taxi?.includes(player_id)
                     && (
                         (league.settings.reserve_allow_sus === 1 && projections[week][player_id]?.injury_status === 'Sus')
                         || (league.settings.reserve_allow_doubtful === 1 && projections[week][player_id]?.injury_status === 'Doubtful')
