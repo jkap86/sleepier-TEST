@@ -193,3 +193,12 @@ button.calculate {
     top: 0;
     right: 0;
 }
+
+span.player_inj_status {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: red;
+    font-weight: 900;
+    font-family: 'GROUPE', sans-serif;
+}

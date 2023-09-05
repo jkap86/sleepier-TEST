@@ -11,6 +11,10 @@ const initialState = {
     projectedRecordDictAll: {},
     week: 1,
     recordType: 'starters_proj',
+    column1: 'Suboptimal',
+    column2: 'Early/Late Flex',
+    column3: 'Out',
+    column4: 'Open Taxi',
     syncing: false
 }
 

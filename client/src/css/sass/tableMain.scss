@@ -233,6 +233,10 @@ table {
 
 }
 
+td.left {
+    position: relative;
+}
+
 table.modal {
     filter: contrast(2);
 
@@ -334,7 +338,7 @@ table.primary {
                     font-family: 'Pulang', sans-serif;
                     margin: auto;
                     width: 100%;
-
+                    font-weight: 100;
                     text-align: center;
                     color: var(--color2);
                     z-index: 1;

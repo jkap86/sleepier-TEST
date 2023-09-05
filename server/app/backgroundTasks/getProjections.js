@@ -55,12 +55,13 @@ module.exports = async (app) => {
                 }
 
                 const projections_totals = projections_week.data
-                    .filter(p => p.stats.pts_ppr)
+                    .filter(p => p.stats.pts_ppr || p.player.injury_status)
                     .map(p => {
                         const ppr_score = getPlayerScore([p], ppr_scoring_settings, true)
                         return {
                             week: i,
                             player_id: p.player_id,
+                            injury_status: p.player.injury_status,
                             stats: {
                                 ...p.stats,
                                 pts_ppr: ppr_score

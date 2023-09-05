@@ -59,6 +59,22 @@ const Lineup = ({
 
     }
 
+    const getInjuryAbbrev = (injury_status) => {
+        switch (injury_status) {
+            case 'Questionable':
+                return 'Q'
+            case 'Sus':
+                return 'S'
+            case 'Doubtful':
+                return 'D'
+            case 'Out':
+                return 'O'
+            case 'IR':
+                return 'IR'
+            default:
+                return ''
+        }
+    }
 
     const lineup_headers = [
         [
@@ -112,7 +128,7 @@ const Lineup = ({
                     className: color
                 },
                 {
-                    text: stateAllPlayers[slot.current_player]?.full_name || 'Empty',
+                    text: <>{stateAllPlayers[slot.current_player]?.full_name}<span className="player_inj_status">{getInjuryAbbrev(projections[week]?.[slot.current_player]?.injury_status)}</span></> || 'Empty',
                     colSpan: 10,
                     className: color + " left",
                     image: {
@@ -229,7 +245,7 @@ const Lineup = ({
                                 className: color
                             },
                             {
-                                text: stateAllPlayers[so]?.full_name || 'Empty',
+                                text: <>{stateAllPlayers[so]?.full_name}<span className="player_inj_status">{getInjuryAbbrev(projections[week]?.[so]?.injury_status)}</span></> || 'Empty',
                                 colSpan: 10,
                                 className: color + " left",
                                 image: {

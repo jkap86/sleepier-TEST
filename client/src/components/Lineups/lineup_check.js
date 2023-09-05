@@ -20,10 +20,23 @@ const LineupCheck = ({
     const { user: state_user } = useSelector(state => state.user)
     const { type1, type2, allPlayers: stateAllPlayers, state: stateState, nflSchedule: stateNflSchedule, projectionDict, isLoadingProjectionDict, projections } = useSelector(state => state.main);
     const { filteredData } = useSelector(state => state.filteredData)
-    const { rankings, includeTaxi, includeLocked, week, recordType } = useSelector(state => state.lineups)
+    const { includeTaxi, includeLocked, week, recordType, column1, column2, column3, column4 } = useSelector(state => state.lineups)
 
 
 
+    const columnOptions = [
+        'Suboptimal',
+        'Early/Late Flex',
+        'Non QB in SF',
+        'Open Roster',
+        'Open IR',
+        'Open Taxi',
+        'Out',
+        'Doubtful',
+        'Ques',
+        'IR',
+        'Sus'
+    ];
 
     const hash = `${includeTaxi}-${includeLocked}`;
 
@@ -33,6 +46,167 @@ const LineupCheck = ({
         setPage(1)
     }, [searched, type1, type2])
 
+    const getColumnValue = (header, matchup, lineup_check, league) => {
+        switch (header) {
+            case 'Suboptimal':
+                return {
+                    text: !matchup?.matchup_id || !lineup_check ? '-' : lineup_check.filter(x => x.notInOptimal).length > 0 ?
+                        lineup_check.filter(x => x.notInOptimal).length :
+                        '√',
+                    colSpan: 2,
+                    className: !matchup?.matchup_id || !lineup_check ? '' : lineup_check.filter(x => x.notInOptimal).length > 0 ?
+                        'red' : 'green'
+                }
+            case 'Early/Late Flex':
+                return {
+                    text: !matchup?.matchup_id || !lineup_check
+                        ? '-'
+                        : lineup_check.filter(x => x.earlyInFlex).length + lineup_check.filter(x => x.lateNotInFlex).length > 0
+                            ? lineup_check.filter(x => x.earlyInFlex).length + lineup_check.filter(x => x.lateNotInFlex).length
+                            : '√',
+                    colSpan: 2,
+                    className: !matchup?.matchup_id || !lineup_check
+                        ? ''
+                        : lineup_check.filter(x => x.earlyInFlex).length + lineup_check.filter(x => x.lateNotInFlex).length > 0
+                            ? 'red'
+                            : 'green'
+                }
+            case 'Open Taxi':
+                return {
+                    text: league.settings.taxi_slots > 0
+                        ? league.settings.taxi_slots - (league.userRoster.taxi?.length || 0) > 0
+                            ? league.settings.taxi_slots - (league.userRoster.taxi?.length || 0)
+                            : '√'
+                        : '-',
+                    colSpan: 2,
+                    className: league.settings.taxi_slots > 0
+                        ? league.settings.taxi_slots - (league.userRoster.taxi?.length || 0) > 0
+                            ? 'red'
+                            : 'green'
+                        : ''
+                }
+            case 'Non QB in SF':
+                return {
+                    text: !matchup?.matchup_id || !lineup_check
+                        ? '-'
+                        : lineup_check.filter(x => x.nonQBinSF).length > 0
+                            ? lineup_check.filter(x => x.nonQBinSF).length
+                            : '√',
+                    colSpan: 2,
+                    className: !matchup?.matchup_id || !lineup_check
+                        ? ''
+                        : lineup_check.filter(x => x.nonQBinSF).length > 0
+                            ? 'red'
+                            : 'green'
+                }
+            case 'Open Roster':
+                return {
+                    text: league.roster_positions.length !== league.userRoster.players?.length
+                        ? ((league.userRoster.players?.length > league.roster_positions.length ? '+' : '') + (league.userRoster.players?.length - league.roster_positions.length))
+                        : '√',
+                    colSpan: 2,
+                    className: league.roster_positions.length !== league.userRoster.players?.length
+                        ? 'red'
+                        : 'green',
+                }
+            case 'Open IR':
+                const total_ir = league.settings.reserve_slots
+                const used_ir = league.userRoster?.reserve?.length || 0
+                const open_ir = total_ir - used_ir;
+                const eligible_ir = league.userRoster.players?.filter(player_id => !league.userRoster.reserve?.includes(player_id)
+                    && (
+                        (league.settings.reserve_allow_sus === 1 && projections[week][player_id]?.injury_status === 'Sus')
+                        || (league.settings.reserve_allow_doubtful === 1 && projections[week][player_id]?.injury_status === 'Doubtful')
+                        || (league.settings.reserve_allow_out === 1 && projections[week][player_id]?.injury_status === 'Out')
+                        || projections[week][player_id]?.injury_status === 'IR'
+                    )
+                ).length
+                return {
+                    text: (open_ir > 0 && eligible_ir > 0)
+                        ? Math.min(eligible_ir, open_ir)
+                        : '√',
+                    colSpan: 2,
+                    className: (open_ir > 0 && eligible_ir > 0)
+                        ? 'red'
+                        : 'green',
+                }
+            case 'Out':
+                return {
+                    text: !matchup?.matchup_id || !lineup_check
+                        ? '-'
+                        : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Out').length > 0
+                            ? lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Out').length
+                            : '√',
+                    colSpan: 2,
+                    className: !matchup?.matchup_id || !lineup_check
+                        ? ''
+                        : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Out').length > 0
+                            ? 'red'
+                            : 'green'
+                }
+            case 'Doubtful':
+                return {
+                    text: !matchup?.matchup_id || !lineup_check
+                        ? '-'
+                        : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Doubtful').length > 0
+                            ? lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Doubtful').length
+                            : '√',
+                    colSpan: 2,
+                    className: !matchup?.matchup_id || !lineup_check
+                        ? ''
+                        : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Doubtful').length > 0
+                            ? 'red'
+                            : 'green'
+                }
+            case 'Ques':
+                return {
+                    text: !matchup?.matchup_id || !lineup_check
+                        ? '-'
+                        : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Questionable').length > 0
+                            ? lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Questionable').length
+                            : '√',
+                    colSpan: 2,
+                    className: !matchup?.matchup_id || !lineup_check
+                        ? ''
+                        : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Questionable').length > 0
+                            ? 'red'
+                            : 'green'
+                }
+            case 'IR':
+                return {
+                    text: !matchup?.matchup_id || !lineup_check
+                        ? '-'
+                        : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'IR').length > 0
+                            ? lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'IR').length
+                            : '√',
+                    colSpan: 2,
+                    className: !matchup?.matchup_id || !lineup_check
+                        ? ''
+                        : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'IR').length > 0
+                            ? 'red'
+                            : 'green'
+                }
+            case 'Sus':
+                return {
+                    text: !matchup?.matchup_id || !lineup_check
+                        ? '-'
+                        : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Sus').length > 0
+                            ? lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Sus').length
+                            : '√',
+                    colSpan: 2,
+                    className: !matchup?.matchup_id || !lineup_check
+                        ? ''
+                        : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Sus').length > 0
+                            ? 'red'
+                            : 'green'
+                }
+            default:
+                return {
+                    text: '-',
+                    colSpan: 2
+                }
+        }
+    }
 
     const lineups_headers = [
         [
@@ -63,22 +237,72 @@ const LineupCheck = ({
         ],
         [
             {
-                text: 'Suboptimal',
+                text: <label className="select">
+                    <p>{column1}</p>
+                    <select
+                        className="hidden_behind click"
+                        onChange={(e) => dispatch(setState({ column1: e.target.value }, 'LINEUPS'))}
+                    >
+                        {
+                            columnOptions
+                                .filter(column => ![column2, column3, column4].includes(column))
+                                .map(column => {
+                                    return <option key={column}>{column}</option>
+                                })
+                        }
+                    </select>
+                </label>,
                 colSpan: 2,
                 className: 'small half'
             },
             {
-                text: <p>Early in Flex</p>,
+                text: <label className="select">
+                    <p>{column2}</p><select
+                        className="hidden_behind click"
+                        onChange={(e) => dispatch(setState({ column2: e.target.value }, 'LINEUPS'))}
+                    >
+                        {
+                            columnOptions
+                                .filter(column => ![column1, column3, column4].includes(column))
+                                .map(column => {
+                                    return <option key={column}>{column}</option>
+                                })
+                        }
+                    </select></label>,
                 colSpan: 2,
                 className: 'small half'
             },
             {
-                text: <p>Late not in Flex</p>,
+                text: <label className="select">
+                    <p>{column3}</p> <select
+                        className="hidden_behind click"
+                        onChange={(e) => dispatch(setState({ column3: e.target.value }, 'LINEUPS'))}
+                    >
+                        {
+                            columnOptions
+                                .filter(column => ![column1, column2, column4].includes(column))
+                                .map(column => {
+                                    return <option key={column}>{column}</option>
+                                })
+                        }
+                    </select></label>,
                 colSpan: 2,
                 className: 'small half'
             },
             {
-                text: <p className="end">Non QBs in SF</p>,
+                text: <label className="select">
+                    <p>{column4}</p><select
+                        className="hidden_behind click"
+                        onChange={(e) => dispatch(setState({ column4: e.target.value }, 'LINEUPS'))}
+                    >
+                        {
+                            columnOptions
+                                .filter(column => ![column1, column2, column3].includes(column))
+                                .map(column => {
+                                    return <option key={column}>{column}</option>
+                                })
+                        }
+                    </select></label>,
                 colSpan: 2,
                 className: 'small half'
             }
@@ -165,36 +389,16 @@ const LineupCheck = ({
                                 : ''
                     },
                     {
-                        text: !matchup?.matchup_id || !lineup_check ? '-' : lineup_check.filter(x => x.notInOptimal).length > 0 ?
-                            lineup_check.filter(x => x.notInOptimal).length :
-                            '√',
-                        colSpan: 2,
-                        className: !matchup?.matchup_id || !lineup_check ? '' : lineup_check.filter(x => x.notInOptimal).length > 0 ?
-                            'red' : 'green'
+                        ...getColumnValue(column1, matchup, lineup_check, league)
                     },
                     {
-                        text: !matchup?.matchup_id || !lineup_check ? '-' : lineup_check.filter(x => x.earlyInFlex).length > 0 ?
-                            lineup_check.filter(x => x.earlyInFlex).length :
-                            '√',
-                        colSpan: 2,
-                        className: !matchup?.matchup_id || !lineup_check ? '' : lineup_check.filter(x => x.earlyInFlex).length > 0 ?
-                            'red' : 'green'
+                        ...getColumnValue(column2, matchup, lineup_check, league)
                     },
                     {
-                        text: !matchup?.matchup_id || !lineup_check ? '-' : lineup_check.filter(x => x.lateNotInFlex).length > 0 ?
-                            lineup_check.filter(x => x.lateNotInFlex).length :
-                            '√',
-                        colSpan: 2,
-                        className: !matchup?.matchup_id || !lineup_check ? '' : lineup_check.filter(x => x.lateNotInFlex).length > 0 ?
-                            'red' : 'green'
+                        ...getColumnValue(column3, matchup, lineup_check, league)
                     },
                     {
-                        text: !matchup?.matchup_id || !lineup_check ? '-' : lineup_check.filter(x => x.nonQBinSF).length > 0 ?
-                            lineup_check.filter(x => x.nonQBinSF).length :
-                            '√',
-                        colSpan: 2,
-                        className: !matchup?.matchup_id || !lineup_check ? '' : lineup_check.filter(x => x.nonQBinSF).length > 0 ?
-                            'red' : 'green'
+                        ...getColumnValue(column4, matchup, lineup_check, league)
                     }
 
                 ],

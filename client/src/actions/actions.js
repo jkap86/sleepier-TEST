@@ -111,13 +111,16 @@ export const fetchMain = (field, item) => {
             const main = await axios.get(`/main/${item}`);
 
             const data = item !== 'projections' ? main.data[0] : main.data[0].reduce((result, item) => {
-                const { week, player_id, ...stats } = item;
+                const { week, player_id, injury_status, ...stats } = item;
 
                 if (!result[week]) {
                     result[week] = {};
                 }
 
-                result[week][player_id] = stats;
+                result[week][player_id] = {
+                    ...stats,
+                    injury_status: injury_status
+                };
                 return result;
             }, {})
 
