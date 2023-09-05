@@ -73,7 +73,7 @@ const LineupCheck = ({
                 }
             case 'Open Taxi':
                 return {
-                    text: league.settings.taxi_slots > 0
+                    text: (league.settings.taxi_slots > 0 && league.settings.bestball !== 1)
                         ? league.settings.taxi_slots - (league.userRoster.taxi?.length || 0) > 0
                             ? league.settings.taxi_slots - (league.userRoster.taxi?.length || 0)
                             : '√'
