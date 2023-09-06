@@ -35,7 +35,8 @@ const LineupCheck = ({
         'Doubtful',
         'Ques',
         'IR',
-        'Sus'
+        'Sus',
+        'Opt-Act'
     ];
 
     const hash = `${includeTaxi}-${includeLocked}`;
@@ -201,6 +202,19 @@ const LineupCheck = ({
                         : lineup_check.filter(x => projections[week][x.current_player]?.injury_status === 'Sus').length > 0
                             ? 'red'
                             : 'green'
+                }
+            case 'Opt-Act':
+                return {
+                    text: projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].optimal_proj.fpts.toFixed(2)
+                        === projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].starters_proj.fpts.toFixed(2)
+                        ? '√'
+                        : (projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].starters_proj.fpts
+                            - projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].optimal_proj.fpts).toFixed(2),
+                    colSpan: 2,
+                    className: projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].optimal_proj.fpts.toFixed(2)
+                        === projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].starters_proj.fpts.toFixed(2)
+                        ? 'green'
+                        : 'red'
                 }
             default:
                 return {

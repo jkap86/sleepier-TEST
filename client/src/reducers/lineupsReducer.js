@@ -10,7 +10,7 @@ const initialState = {
     includeLocked: true,
     projectedRecordDictAll: {},
     week: 1,
-    recordType: 'starters_proj',
+    recordType: 'optimal_proj',
     column1: 'Suboptimal',
     column2: 'Early/Late Flex',
     column3: 'Out',
