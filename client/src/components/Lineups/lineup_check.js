@@ -205,14 +205,14 @@ const LineupCheck = ({
                 }
             case 'Opt-Act':
                 return {
-                    text: projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].optimal_proj.fpts.toFixed(2)
-                        === projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].starters_proj.fpts.toFixed(2)
+                    text: projectionDict[hash]?.[week][league.league_id]?.[league.userRoster.roster_id].optimal_proj.fpts.toFixed(2)
+                        === projectionDict[hash]?.[week][league.league_id]?.[league.userRoster.roster_id].starters_proj.fpts.toFixed(2)
                         ? '√'
-                        : (projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].starters_proj.fpts
-                            - projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].optimal_proj.fpts).toFixed(2),
+                        : (projectionDict[hash]?.[week][league.league_id]?.[league.userRoster.roster_id].starters_proj.fpts
+                            - projectionDict[hash]?.[week][league.league_id]?.[league.userRoster.roster_id].optimal_proj.fpts).toFixed(2),
                     colSpan: 2,
-                    className: projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].optimal_proj.fpts.toFixed(2)
-                        === projectionDict[hash][week][league.league_id]?.[league.userRoster.roster_id].starters_proj.fpts.toFixed(2)
+                    className: projectionDict[hash]?.[week][league.league_id]?.[league.userRoster.roster_id].optimal_proj.fpts.toFixed(2)
+                        === projectionDict[hash]?.[week][league.league_id]?.[league.userRoster.roster_id].starters_proj.fpts.toFixed(2)
                         ? 'green'
                         : 'red'
                 }
@@ -470,7 +470,7 @@ const LineupCheck = ({
         ?.filter(l => !searched.id || searched.id === l.league_id)
         ?.flatMap(league => {
             const getAttribute = (attr, roster_id) => {
-                return Object.keys(projectionDict?.[hash] || {}).reduce((acc, cur) => acc + (projectionDict[hash][cur]?.[league.league_id]?.[roster_id]?.[recordType]?.[attr] || 0), 0)
+                return Object.keys(projectionDict?.[hash] || {}).reduce((acc, cur) => acc + (projectionDict[hash]?.[cur]?.[league.league_id]?.[roster_id]?.[recordType]?.[attr] || 0), 0)
             }
             const wins = getAttribute('wins', league.userRoster.roster_id) + getAttribute('median_wins', league.userRoster.roster_id)
             const losses = getAttribute('losses', league.userRoster.roster_id) + getAttribute('median_losses', league.userRoster.roster_id)
