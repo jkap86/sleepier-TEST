@@ -118,16 +118,24 @@ export const getRecordDict = (
         const getOptimalLineup = () => {
             let optimal_lineup = []
             let player_ranks_filtered = players
-            starting_slots.map((slot, index) => {
+            starting_slots.forEach((slot, index) => {
                 const player_id = matchup.starters?.[index]
                 const kickoff = new Date(parseInt(schedule
                     ?.find(matchup => matchup.team.find(t => matchTeam(t.id) === allplayers[player_id]?.team))
                     ?.kickoff) * 1000).getTime()
 
                 const slot_options = player_ranks_filtered
-                    .filter(x =>
-                        position_map[slot].includes(allplayers[x.id]?.position)
-                    )
+                    .filter(x => {
+                        const slot_option_kickoff = new Date(parseInt(schedule
+                            ?.find(matchup => matchup.team.find(t => matchTeam(t.id) === allplayers[x.id]?.team))
+                            ?.kickoff) * 1000).getTime()
+
+                        if (includeLocked && slot_option_kickoff < new Date().getTime()) {
+                            return false
+                        } else {
+                            return position_map[slot].includes(allplayers[x.id]?.position)
+                        }
+                    })
                     .sort(
                         (a, b) => weeklyRankings ? a.rank - b.rank : b.rank - a.rank
                     )
@@ -137,7 +145,8 @@ export const getRecordDict = (
                 player_ranks_filtered = player_ranks_filtered.filter(x => x.id !== optimal_player)
                 optimal_lineup.push({
                     slot: position_abbrev[slot],
-                    player: optimal_player
+                    player: optimal_player,
+                    slot_options: slot_options.map(x => allplayers[x.id].full_name)
                 })
             })
 
