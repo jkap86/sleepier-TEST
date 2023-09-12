@@ -71,6 +71,7 @@ const LoadData = ({ tab, player_ids }) => {
     useEffect(() => {
         if (user.user_id && leagues.length > 0) {
             handleFetchFilteredData();
+            dispatch(setState({ week: state.week }, 'LINEUPS'))
         }
     }, [user, leagues, handleFetchFilteredData])
 

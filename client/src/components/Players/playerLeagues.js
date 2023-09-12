@@ -6,6 +6,7 @@ import LeagueInfo from "../Leagues/leagueInfo";
 import { setState } from "../../actions/actions";
 import PlayerModal from "./playerModal";
 import { getPlayerScore } from '../../functions/getPlayerScore';
+import { getTrendColor } from "../../functions/misc";
 
 const PlayerLeagues = ({
     leagues_owned,
@@ -51,7 +52,7 @@ const PlayerLeagues = ({
                 break;
         }
 
-        console.log(keys)
+
         const most_owned = lmplayershares
             .filter(lm => lm?.user_id && lm?.playershares?.[player_id])
             .map(lm => {
@@ -133,7 +134,15 @@ const PlayerLeagues = ({
                     }
                 },
                 {
-                    text: lo.userRoster?.rank,
+                    text: <p
+                        className={(lo.userRoster?.rank / lo.rosters.length) < .5 ? 'green stat' :
+                            (lo.userRoster?.rank / lo.rosters.length) > .5 ? 'red stat' :
+                                'stat'}
+                        style={getTrendColor(- ((lo.userRoster.rank / lo.rosters.length) - .5), .0025)
+                        }
+                    >
+                        {lo.userRoster?.rank}
+                    </p>,
                     colSpan: 1,
                     className: lo.userRoster?.rank / lo.rosters.length <= .25 ? 'green' :
                         lo.userRoster?.rank / lo.rosters.length >= .75 ? 'red' :

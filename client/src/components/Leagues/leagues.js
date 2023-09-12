@@ -5,7 +5,7 @@ import TableMain from "../Home/tableMain";
 import { filterLeagues } from '../../functions/filterLeagues';
 import Heading from "../Home/heading";
 import { setState } from "../../actions/actions";
-import { loadingIcon } from "../../functions/misc";
+import { loadingIcon, getTrendColor } from "../../functions/misc";
 import LeagueInfo from './leagueInfo';
 
 const Leagues = () => {
@@ -69,19 +69,24 @@ const Leagues = () => {
                         colSpan: 1
                     },
                     {
-                        text: (total_games > 0 ?
-                            (league.userRoster.settings.wins / total_games)
+                        text: (record?.wins + record?.losses > 0 ?
+                            (record?.wins / (record?.wins + record?.losses))
                             :
                             '--'
-                        ).toLocaleString("en-US", { maximumFractionDigits: 4, minimumFractionDigits: 4 }).slice(1, 6),
+                        ).toLocaleString("en-US", { maximumFractionDigits: 4, minimumFractionDigits: 4 }),
                         colSpan: 1
                     },
                     {
-                        text: league.userRoster?.rank || '-',
+                        text: <p
+                            className={(league.userRoster?.rank / league.rosters.length) < .5 ? 'green stat' :
+                                (league.userRoster?.rank / league.rosters.length) > .5 ? 'red stat' :
+                                    'stat'}
+                            style={getTrendColor(-((league.userRoster.rank / league.rosters.length) - .5), .0025)}
+                        >
+                            {league.userRoster?.rank | '-'}
+                        </p>,
                         colSpan: 1,
-                        className: league.userRoster?.rank / league.rosters.length <= .25 ? 'green' :
-                            league.userRoster?.rank / league.rosters.length >= .75 ? 'red' :
-                                null
+
                     }
                 ],
                 secondary_table: (
@@ -97,9 +102,9 @@ const Leagues = () => {
         ?.reduce(
             (acc, cur) => {
                 return {
-                    wins: acc.wins + (cur.userRoster?.wins || 0),
-                    losses: acc.losses + (cur.userRoster?.losses || 0),
-                    ties: acc.ties + (cur.userRoster?.ties || 0),
+                    wins: acc.wins + (cur.userRoster?.settings?.wins || 0),
+                    losses: acc.losses + (cur.userRoster?.settings?.losses || 0),
+                    ties: acc.ties + (cur.userRoster?.settings?.ties || 0),
                     fpts: acc.fpts + parseFloat((cur.userRoster?.settings?.fpts || 0) + '.' + (cur.userRoster?.settings?.fpts_decimal || 0)),
                     fpts_against: acc.fpts_against + parseFloat((cur.userRoster?.settings?.fpts_against || 0) + '.' + (cur.userRoster?.settings?.fpts_against_decimal || 0))
                 }

@@ -5,6 +5,7 @@ import TradeTipRosters from "../Trades/tradeTipRosters";
 import { useSelector, useDispatch } from 'react-redux';
 import { setState } from "../../actions/actions";
 import { filterLeagues } from '../../functions/filterLeagues';
+import { getTrendColor } from "../../functions/misc";
 
 const LeaguemateLeagues = ({ leaguemate }) => {
     const dispatch = useDispatch();
@@ -306,7 +307,15 @@ const LeaguemateLeagues = ({ leaguemate }) => {
 
                 },
                 {
-                    text: lm_league.lmRoster.rank,
+                    text: <p
+                        className={(lm_league.lmRoster?.rank / lm_league.rosters.length) < .5 ? 'green stat' :
+                            (lm_league.lmRoster?.rank / lm_league.rosters.length) > .5 ? 'red stat' :
+                                'stat'}
+                        style={getTrendColor(- ((lm_league.lmRoster.rank / lm_league.rosters.length) - .5), .0025)
+                        }
+                    >
+                        {lm_league.lmRoster.rank}
+                    </p>,
                     colSpan: 2,
                     className: lm_league.lmRoster.rank / lm_league.rosters.length <= .25 ? 'green' :
                         lm_league.lmRoster.rank / lm_league.rosters.length >= .75 ? 'red' :
@@ -317,7 +326,15 @@ const LeaguemateLeagues = ({ leaguemate }) => {
                     colSpan: 2
                 },
                 {
-                    text: lm_league.userRoster.rank,
+                    text: <p
+                        className={(lm_league.userRoster?.rank / lm_league.rosters.length) < .5 ? 'green stat' :
+                            (lm_league.userRoster?.rank / lm_league.rosters.length) > .5 ? 'red stat' :
+                                'stat'}
+                        style={getTrendColor(- ((lm_league.userRoster.rank / lm_league.rosters.length) - .5), .0025)
+                        }
+                    >
+                        {lm_league.userRoster.rank}
+                    </p>,
                     colSpan: 2,
                     className: lm_league.userRoster.rank / lm_league.rosters.length <= .25 ? 'green' :
                         lm_league.userRoster.rank / lm_league.rosters.length >= .75 ? 'red' :

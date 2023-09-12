@@ -126,12 +126,12 @@ const Leaguemates = ({ }) => {
                     },
                     {
                         text: (
-                            lm.leagues?.reduce((acc, cur) => acc + cur.userRoster.settings?.wins, 0) +
+                            lm_leagues?.reduce((acc, cur) => acc + cur.userRoster.settings?.wins, 0) +
                             "-" +
-                            lm.leagues?.reduce((acc, cur) => acc + cur.userRoster.settings?.losses, 0) +
+                            lm_leagues?.reduce((acc, cur) => acc + cur.userRoster.settings?.losses, 0) +
                             (
-                                lm.leagues?.reduce((acc, cur) => acc + cur.userRoster.settings?.ties, 0) > 0 ?
-                                    `${lm.leagues?.reduce((acc, cur) => acc + cur.userRoster.settings?.ties, 0)}` :
+                                lm_leagues?.reduce((acc, cur) => acc + cur.userRoster.settings?.ties, 0) > 0 ?
+                                    `${lm_leagues?.reduce((acc, cur) => acc + cur.userRoster.settings?.ties, 0)}` :
                                     ''
                             )
                         ),
