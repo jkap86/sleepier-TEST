@@ -182,9 +182,7 @@ export const getRecordDict = (
                     const alt_hour = alt_gametime.getHours()
                     const alt_timeslot = parseFloat(alt_day + '.' + alt_hour)
 
-                    return timeslot < 7
-                        && alt_timeslot > timeslot
-
+                    return alt_kickoff > kickoff
                         && position_map[slot].includes(allplayers[x]?.position)
                         && position_map[starting_slots[starter_index]].includes(allplayers[cur_id]?.position)
                         && position_map[league.roster_positions[starter_index]].length < position_map[slot].length
@@ -202,9 +200,7 @@ export const getRecordDict = (
                     const alt_timeslot = parseFloat(alt_day + '.' + alt_hour)
 
                     return (
-                        timeslot > 7.17
-                        && alt_timeslot < timeslot
-
+                        alt_kickoff < kickoff
                         && position_map[slot].includes(allplayers[x]?.position)
                         && position_map[starting_slots[starter_index]].includes(allplayers[cur_id]?.position)
                         && position_map[league.roster_positions[starter_index]].length > position_map[slot].length

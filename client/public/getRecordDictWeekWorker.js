@@ -150,7 +150,7 @@ self.onmessage = (e) => {
                     const alt_hour = alt_gametime.getHours()
                     const alt_timeslot = parseFloat(alt_day + '.' + alt_hour)
 
-                    return timeslot < 7
+                    return timeslot < 7.17
                         && alt_timeslot > timeslot
 
                         && position_map[slot].includes(allplayers[x]?.position)
