@@ -78,7 +78,7 @@ module.exports = async (app) => {
         fs.writeFileSync('./projections.json', JSON.stringify(projections))
     }
 
-    if (process.env.DATABASE_URL) {
+    if (!process.env.DATABASE_URL) {
         setTimeout(async () => {
             const month = new Date().getMonth()
             const state = app.get('state')
