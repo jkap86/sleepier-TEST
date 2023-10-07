@@ -1,48 +1,63 @@
 'use strict'
 
+const fs = require('fs');
+const path = require('path');
+
+
 module.exports = (app) => {
     const JSONStream = require('JSONStream');
     var router = require("express").Router();
 
     router.get('/allplayers', (req, res) => {
-        const allplayers = require('../../allplayers.json');
-
         res.setHeader('Content-Type', 'application/json');
         res.setHeader('Transfer-Encoding', 'chunked');
 
-        const stream = JSONStream.stringify();
+        const allplayers = path.join(__dirname, '../../allplayers.json');
 
-        stream.pipe(res);
+        try {
+            const data = fs.readFileSync(allplayers, 'utf8');
+            const stream = JSONStream.stringify();
+            stream.pipe(res);
+            stream.end(JSON.parse(data));
+        } catch (err) {
+            console.log(err.message)
+        }
 
-
-        stream.end(allplayers)
     })
 
 
     router.get('/schedule', (req, res) => {
-        const schedule = require('../../schedule.json');
-
         res.setHeader('Content-Type', 'application/json');
         res.setHeader('Transfer-Encoding', 'chunked');
 
-        const stream = JSONStream.stringify();
+        const schedule = path.join(__dirname, '../../schedule.json');
 
-        stream.pipe(res);
+        try {
+            const data = fs.readFileSync(schedule, 'utf8');
+            const stream = JSONStream.stringify();
+            stream.pipe(res);
+            stream.end(JSON.parse(data));
+        } catch (err) {
+            console.log(err.message)
+        }
 
-        stream.end(schedule)
+
     })
 
     router.get('/projections', (req, res) => {
-        const projections = require('../../projections.json');
-
         res.setHeader('Content-Type', 'application/json');
         res.setHeader('Transfer-Encoding', 'chunked');
 
-        const stream = JSONStream.stringify();
+        const projections = path.join(__dirname, '../../projections.json');
 
-        stream.pipe(res);
-
-        stream.end(projections)
+        try {
+            const data = fs.readFileSync(projections, 'utf8');
+            const stream = JSONStream.stringify();
+            stream.pipe(res);
+            stream.end(JSON.parse(data));
+        } catch (err) {
+            console.log(err.message)
+        }
     })
 
     app.use('/main', router);
